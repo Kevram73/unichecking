@@ -32,6 +32,14 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 
+Route::prefix('annees')->group(function () {
+    Route::get('/', [AnneeController::class, 'index']);
+    Route::post('/', [AnneeController::class, 'store']);
+    Route::get('/{id}', [AnneeController::class, 'show']);
+    Route::put('/{id}', [AnneeController::class, 'update']);
+    Route::delete('/{id}', [AnneeController::class, 'destroy']);
+});
+
 /**
 *** ENSEIGNANT
 ***/
