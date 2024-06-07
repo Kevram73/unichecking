@@ -1,147 +1,93 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 use App\Models\Grade;
-
-require 'constantes.php';
+use Exception;
 
 class GradeController extends Controller
 {
-	public function save(Request $request){
-		$grd = $request->all();
-		$la_grd = null;
-		$status = [];
-		
-		$blUpdate = isset($grd["id"]) && $grd["id"] > 0;
-		$id = $blUpdate ? $grd["id"] : 0;
-		
-		//id inconnu
-		if (isset($grd["id"]) && $grd["id"] > 0)
-		$la_grd = $this->ctrlField_NotFound($grd["id"], $status, status_grd__idnotfnd, 
-			function($id, &$la_grd){ 
-				$la_grd = Grade::find($id);
-				return $la_grd == null;
-			});					
-			
-		//intitule non renseigné
-		$this->ctrlField_Empty($grd["intitule"], $status, status_grd__intitulevide);
-			
-		//intitule doublon
-		$exists = !Grade::where("intitule", $grd["intitule"])
-							->where("id", '<>', $id)
-							->get()->isEmpty();	
-		if ($exists) 
-				$status[] = status_grd__intituledbl;
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $grades = Grade::all();
+        return view('grades.index', compact('grades'));
+    }
 
-		//SI au moins l'une des erreurs plus haut sont retrouvées
-		if (count($status) > 0) 
-			return ["status" =>$status, "get"=> $la_grd];
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('grades.create');
+    }
 
-		if (!$blUpdate)
-			$la_grd = new Grade();
-		
-		try {
-			DB::beginTransaction();
-		
-			$la_grd->fill($grd);
-			$la_grd->save();
-			
-			DB::commit();
-			return ["status" =>$status, "get"=>$la_grd];
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'intitule' => 'required|string|max:255',
+            'volume_horaire' => 'required|numeric'
+        ]);
 
-		} catch (Throwable $e) {
-			DB::rollback();
-			return ["status" => [status_bderror], "get"=>$la_grd];
-		}	
-			
-		return ["status" =>$status, "get"=>$la_grd];	
-	}	
-	
-	public function liste(Request $request){
-		$found = Grade::where('id', '<>', 0)
-		->when($request->id, function ($query, $id) {
-			return $query->where('id', $id);
-		})->when($request->intitule, function ($query, $intitule) {
-			return $query->where('intitule', 'like', "%$intitule%");
-		})->orderBy('intitule', 'ASC');
-		return $found->get()->toJson();
-	}	
-	
-		
-	public function supprimer($id){
-		$status = [];
-		
-		$la_grd = Grade::find($id);
-		
-		if ($la_grd == null)
-			$status[] = status_grd__idnotfnd;
-		
-		//SI au moins l'une des erreurs plus haut sont retrouvées
-		if (count($status) > 0) return $status;
-	
-		$la_grd->delete();
-		
-		return $status;
-	}
-	
-	public function vw_liste(Request $request){				
-		$allData = array();
-		$allData['data'] = $this->liste(new Request([]));
-		return view('grade_all', $allData);
-	}
-	
-	
-	public function vw_save(Request $request){
-		$resultat = null;
-		$id = $request->id;
-		
-		$resultat = $this->save($request);
-		if (isset($id) && $id > 0) {} else $id = 0;
+        try {
+            $grade = new Grade($validated);
+            $grade->save();
+            return redirect()->route('grades.index')->with('success', 'Grade has been successfully created.');
+        } catch (Exception $e) {
+            return back()->withErrors('An error occurred while saving the grade.');
+        }
+    }
 
-		$status = $this->statusToMessages($resultat["status"]);
+    /**
+     * Display the specified resource.
+     */
+    public function show(Grade $grade)
+    {
+        return view('grades.show', compact('grade'));
+    }
 
-		session()->flash('status', $status);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(Grade $grade)
+    {
+        return view('grades.edit', compact('grade'));
+    }
 
-		return redirect()->route('grade.show');
-	}
-	
-	public function vw_delete($id){
-		$la_grd = Grade::find($id);
-		$resultat = $this->supprimer($id);
-		$status = $this->statusToMessages($resultat);		
-		session()->flash('status', $status);	
-		
-		return redirect()->route('grade.show');			
-	}
-	
-	public function statusToMessages($status){		
-		$messages = [];
-		$suc = []; $err = [];
-		
-		foreach ($status as $s){			
-			if ($s == status_grd__intitulevide)
-				$err[] = "L'intitulé de la fonction n'est pas renseignée";
-			if ($s == status_grd__intituledbl)
-				$err[] = "L'intitulé de la fonction existe déjà";
-			if ($s == status_grd__idnotfnd)
-				$err[] = "La fonction n'a pas été retrouvée";	
-			if ($s == status_prob_bd) 	
-				$err[] = "Problème de base de données. Veuillez réessayer!";		
-		}
-		if (count($status) == 0)
-			$suc[] = "Succès de l'opération!";
-		
-		$messages["succes"] = $suc;
-		$messages["erreur"] = $err;
-		
-		return $messages;
-	}	
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, Grade $grade)
+    {
+        $validated = $request->validate([
+            'intitule' => 'required|string|max:255',
+            'volume_horaire' => 'required|numeric'
+        ]);
 
-	
-	public function alreadyUsed($id){
-		return 0;
-	}
+        try {
+            $grade->update($validated);
+            return redirect()->route('grades.index')->with('success', 'Grade has been successfully updated.');
+        } catch (Exception $e) {
+            return back()->withErrors('An error occurred while updating the grade.');
+        }
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(Grade $grade)
+    {
+        try {
+            $grade->delete();
+            return redirect()->route('grades.index')->with('success', 'Grade has been successfully deleted.');
+        } catch (Exception $e) {
+            return back()->withErrors('An error occurred while deleting the grade.');
+        }
+    }
 }

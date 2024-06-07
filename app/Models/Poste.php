@@ -11,14 +11,14 @@ class Poste extends Model
 {
     use HasFactory;
 	protected $table = 'Poste';
-	
+
 	protected $fillable = ['libelle', 'categorie_poste_id'];
- 
+
 	/**
-     * 
+     *
      */
     public function categorie(): BelongsTo
     {
         return $this->belongsTo(CategoriePoste::class, 'categorie_poste_id');
-    }	 
+    }
 }

@@ -4,6 +4,10 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Deplacement;
+use App\Models\Annee;
+use App\Models\Universite;
+use App\Models\TypeDeplacement;
+use App\Models\Enseignant;
 use Exception;
 
 class DeplacementController extends Controller
@@ -13,7 +17,8 @@ class DeplacementController extends Controller
      */
     public function index()
     {
-        //
+        $deplacements = Deplacement::all();
+        return view("deplacements.index", compact('deplacements'));
     }
 
     /**
@@ -21,7 +26,12 @@ class DeplacementController extends Controller
      */
     public function create()
     {
-        //
+        $annees = Annee::all();
+        $universites = Universite::all();
+        $type_deplacements = TypeDeplacement::all();
+        $enseignants = Enseignant::all();
+
+        return view("deplacements.create", compact('annees', 'universites', 'type_deplacements', 'enseignants'));
     }
 
     /**
@@ -48,7 +58,7 @@ class DeplacementController extends Controller
         }
 
 
-        return redirect()->route('deplacements');
+        return redirect()->route('deplacements.index')->with('msg', $msg);
     }
 
     /**
@@ -57,7 +67,7 @@ class DeplacementController extends Controller
     public function show(string $id)
     {
         $deplacement = Deplacement::find($id);
-        return new DeplacementResource($deplacement);
+        return view('deplacements.show', compact('deplacement'));
     }
 
     /**
@@ -92,7 +102,7 @@ class DeplacementController extends Controller
             $msg = "Un problème est survenu lors de l'enregistrement";
         }
 
-        return redirect()->route('deplacements', compact('msg'));
+        return redirect()->route('deplacements.index', compact('msg'));
 
     }
 
@@ -110,6 +120,6 @@ class DeplacementController extends Controller
             $msg = "Une erreur est survenue lors de la suppression";
         }
 
-        return redirect()->route('deplacements');
+        return redirect()->route('deplacements.index')->with('msg', $msg);
     }
 }

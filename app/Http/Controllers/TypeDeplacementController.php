@@ -1,144 +1,91 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 use App\Models\TypeDeplacement;
-
-require 'constantes.php';
+use Exception;
 
 class TypeDeplacementController extends Controller
 {
-	public function save(Request $request){
-		$tdpl = $request->all();
-		$le_tdpl = null;
-		$status = [];
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $types = TypeDeplacement::all();
+        return view('types.index', compact('types'));
+    }
 
-		$blUpdate = isset($tdpl["id"]) && $tdpl["id"] > 0;
-		$id = $blUpdate ? $tdpl["id"] : 0;
-		
-		//id inconnu
-		if (isset($tdpl["id"]) && $tdpl["id"] > 0)
-		$le_tdpl = $this->ctrlField_NotFound($tdpl["id"], $status, status_tdpl__idnotfnd, 
-			function($id, &$le_tdpl){ 
-				$le_tdpl = TypeDeplacement::find($id);
-				return $le_tdpl == null;
-			});				
-						
-		//désignation non renseigné
-		$this->ctrlField_Empty($tdpl["designation"], $status, status_tdpl__dsgvide);
-			
-		//désignation doublon
-		$exists = !TypeDeplacement::where("designation", $tdpl["designation"])
-							->where("id", '<>', $id)
-							->get()->isEmpty();	
-		if ($exists) 
-				$status[] = status_tdpl__dsgdbl;
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        return view('types.create');
+    }
 
-		//SI au moins l'une des erreurs plus haut sont retrouvées
-		if (count($status) > 0) 
-			return ["status" =>$status, "get"=> $le_tdpl];
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        $validated = $request->validate([
+            'designation' => 'required|string|max:255|unique:type_deplacements,designation',
+        ]);
 
-		if (!$blUpdate)
-			$le_tdpl = new TypeDeplacement();
-		
-		try {
-			DB::beginTransaction();
-		
-			$le_tdpl->fill($tdpl);
-			$le_tdpl->save();
-			
-			DB::commit();
-			return ["status" =>$status, "get"=>$le_tdpl];
+        try {
+            $type = new TypeDeplacement($validated);
+            $type->save();
+            return redirect()->route('types.index')->with('success', 'Type of displacement created successfully.');
+        } catch (Exception $e) {
+            return back()->withErrors('An error occurred while saving the type of displacement.');
+        }
+    }
 
-		} catch (Throwable $e) {
-			DB::rollback();
-			return ["status" => [status_bderror], "get"=>$le_tdpl];
-		}	
-			
-		return ["status" =>$status, "get"=>$le_tdpl];	
-	}	
-	
-	public function liste(Request $request){
-		$found = TypeDeplacement::where('id', '<>', 0)
-		->when($request->id, function ($query, $id) {
-			return $query->where('id', $id);
-		})->when($request->designation, function ($query, $designation) {
-			return $query->where('designation', 'like', "%$designation%");
-		})->orderBy('designation', 'ASC');
-		return $found->get()->toJson();
-	}	
-	
-		
-	public function supprimer($id){
-		$status = [];
-		
-		$le_tdpl = TypeDeplacement::find($id);
-		
-		if ($le_tdpl == null)
-			$status[] = status_tdpl__idnotfnd;
-		
-		//SI au moins l'une des erreurs plus haut sont retrouvées
-		if (count($status) > 0) return $status;
-	
-		$le_tdpl->delete();
-		
-		return $status;
-	}
-	
-	public function vw_liste(Request $request){				
-		$allData = array();
-		$allData['data'] = $this->liste(new Request([]));
-		return view('type_deplacement_all', $allData);
-	}
-	
-	
-	public function vw_save(Request $request){
-		$resultat = null;
-		$id = $request->id;
-		
-		$resultat = $this->save($request);
-		if (isset($id) && $id > 0) {} else $id = 0;
+    /**
+     * Display the specified resource.
+     */
+    public function show(TypeDeplacement $type)
+    {
+        return view('types.show', compact('type'));
+    }
 
-		$status = $this->statusToMessages($resultat["status"]);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(TypeDeplacement $type)
+    {
+        return view('types.edit', compact('type'));
+    }
 
-		session()->flash('status', $status);
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, TypeDeplacement $type)
+    {
+        $validated = $request->validate([
+            'designation' => 'required|string|max:255|unique:type_deplacements,designation,' . $type->id,
+        ]);
 
-		return redirect()->route('type_deplacement.show');
-	}
+        try {
+            $type->update($validated);
+            return redirect()->route('types.index')->with('success', 'Type of displacement updated successfully.');
+        } catch (Exception $e) {
+            return back()->withErrors('An error occurred while updating the type of displacement.');
+        }
+    }
 
-	
-	public function vw_delete($id){
-		$resultat = $this->supprimer($id);
-		$status = $this->statusToMessages($resultat);		
-		session()->flash('status', $status);
-		return redirect()->route('type_deplacement.show');			
-	}
-	
-	public function statusToMessages($status){		
-		$messages = [];
-		$suc = []; $err = [];
-		foreach ($status as $s){			
-			if ($s == status_tdpl__dsgvide)
-				$err[] = "Désignation non renseignée";
-			if ($s == status_tdpl__dsgdbl) 
-				$err[] = "La désignation est déjà enregistrée";
-			if ($s == status_tdpl__idnotfnd)
-				$err[] = "Désignation inconnue";	
-			if ($s == status_prob_bd) 	
-				$err[] = "Problème de base de données. Veuillez réessayer!";		
-		}
-		if (count($status) == 0)
-			$suc[] = "Succès de l'opération!";
-		
-		$messages["succes"] = $suc;
-		$messages["erreur"] = $err;
-		
-		return $messages;
-	}	
-
-	public function alreadyUsed($id){
-		return 0;
-	}
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(TypeDeplacement $type)
+    {
+        try {
+            $type->delete();
+            return redirect()->route('types.index')->with('success', 'Type of displacement deleted successfully.');
+        } catch (Exception $e) {
+            return back()->withErrors('An error occurred while deleting the type of displacement.');
+        }
+    }
 }

@@ -32,6 +32,20 @@ Route::get('/', function () {
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
 
 
+Route::resource('annees', AnneeController::class);
+Route::resource('enseignants', EnseignantController::class);
+Route::resource('deplacements', DeplacementController::class);
+Route::resource('facultes', FaculteController::class);
+Route::resource('filieres', FiliereController::class);
+Route::resource('grades', GradeController::class);
+Route::resource('grades', PosteController::class);
+Route::resource('grades', SpecialiteController::class);
+Route::resource('type_deplacements', TypeDeplacementController::class);
+Route::resource('type_pieces', TypePieceController::class);
+Route::resource('ues', UEController::class);
+
+
+
 Route::prefix('annees')->group(function () {
     Route::get('/', [AnneeController::class, 'index']);
     Route::post('/', [AnneeController::class, 'store']);

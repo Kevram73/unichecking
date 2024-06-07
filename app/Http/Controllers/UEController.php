@@ -1,163 +1,106 @@
 <?php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
-use Illuminate\Support\Facades\DB;
-
 use App\Models\UE;
-
-require 'constantes.php';
+use App\Models\Universite;
+use Exception;
 
 class UEController extends Controller
 {
-	public function save(Request $request){
-		$ue = $request->all();
-		$l_ue = null;
-		$status = [];
-		
-		$blUpdate = isset($ue["id"]) && $ue["id"] > 0;
-		$id = $blUpdate ? $ue["id"] : 0;
-		
-		//id inconnu
-		if (isset($ue["id"]) && $ue["id"] > 0)
-		$l_ue = $this->ctrlField_NotFound($ue["id"], $status, status_ue__idnotfnd, 
-			function($id, &$l_ue){ 
-				$l_ue = UE::find($id);
-				return $l_ue == null;
-			});				
-			
-		//code non renseigné
-		$this->ctrlField_Empty($ue["code"], $status, status_ue__codevide);
-			
-		//code doublon
-		$exists = !UE::where("code", $ue["code"])
-							->where("id", '<>', $id)
-							->get()->isEmpty();	
-		if ($exists) 
-				$status[] = status_ue__codedbl;			
-			
-		//intitule non renseigné
-		$this->ctrlField_Empty($ue["intitule"], $status, status_ue__intitulevide);
-			
-		//intitule doublon
-		$exists = !UE::where("intitule", $ue["intitule"])
-							->where("id", '<>', $id)
-							->get()->isEmpty();	
-		if ($exists) 
-				$status[] = status_ue__intituledbl;
+    /**
+     * Display a listing of the resource.
+     */
+    public function index()
+    {
+        $ues = UE::all();
+        return view('ues.index', compact('ues'));
+    }
 
-		//SI au moins l'une des erreurs plus haut sont retrouvées
-		if (count($status) > 0) 
-			return ["status" =>$status, "get"=> $l_ue];
+    /**
+     * Show the form for creating a new resource.
+     */
+    public function create()
+    {
+        $universites = Universite::all();
+        return view('ues.create', compact('universites'));
+    }
 
-		if (!$blUpdate)
-			$l_ue = new UE();
-		
-		try {
-			DB::beginTransaction();
-		
-			$l_ue->fill($ue);
-			$l_ue->save();
-			
-			DB::commit();
-			return ["status" =>$status, "get"=>$l_ue];
+    /**
+     * Store a newly created resource in storage.
+     */
+    public function store(Request $request)
+    {
+        try{
+            $ue = new UE();
+            $ue->universite_id = $request->universite_id;
+            $ue->intitule = $request->intitule;
+            $ue->description = $request->description;
+            $ue->code = $request->code;
+            $ue->volume_horaire = $request->volume_horaire;
+            $ue->save();
+            $msg = "L'enregistrement est bien passé";
+        } catch(Exception $e){
+            $msg = "Une erreur s'est produite lors de l'enregistrement";
+        }
 
-		} catch (Throwable $e) {
-			DB::rollback();
-			return ["status" => [status_bderror], "get"=>$l_ue];
-		}	
-			
-		return ["status" =>$status, "get"=>$l_ue];	
-	}	
-	
-	public function liste(Request $request){
-		$found = UE::where('id', '<>', 0)
-		->when($request->id, function ($query, $id) {
-			return $query->where('id', $id);
-		})->when($request->code, function ($query, $code) {
-			return $query->where('code', $code);
-		})->when($request->intitule, function ($query, $intitule) {
-			return $query->where('intitule', 'like', "%$intitule%");
-		})->orderBy('code', 'ASC');
-		return $found->get()->toJson();
-	}	
-	
-		
-	public function supprimer($id){
-		$status = [];
-		
-		$l_ue = UE::find($id);
-		
-		if ($l_ue == null)
-			$status[] = status_ue__idnotfnd;
-		
-		//SI au moins l'une des erreurs plus haut sont retrouvées
-		if (count($status) > 0) return $status;
-	
-		$l_ue->delete();
-		
-		return $status;
-	}
-	
-	public function vw_liste(Request $request){				
-		$allData = array();
-		$allData['data'] = $this->liste(new Request([]));
-		return view('ue_all', $allData);
-	}
-	
-	
-	public function vw_save(Request $request){
-		$resultat = null;
-		$id = $request->id;
-		
-		$resultat = $this->save($request);
-		if (isset($id) && $id > 0) {} else $id = 0;
+        return redirect()->route('ues.index')->with('msg', $msg);
+    }
 
-		$status = $this->statusToMessages($resultat["status"]);
+    /**
+     * Display the specified resource.
+     */
+    public function show(string $id)
+    {
+        $ue = UE::find($id);
+        return view('ues.show', compact('ue'));
+    }
 
-		session()->flash('status', $status);
+    /**
+     * Show the form for editing the specified resource.
+     */
+    public function edit(string $id)
+    {
+        $universites = Universite::all();
+        $ue = UE::find($id);
+        return view('ues.edit', compact('universites', 'ue'));
+    }
 
-		return redirect()->route('ue.show');
-	}
-	
-	public function vw_delete($id){
-		$l_ue = UE::find($id);
-		$resultat = $this->supprimer($id);
-		$status = $this->statusToMessages($resultat);		
-		session()->flash('status', $status);	
-		
-		return redirect()->route('ue.show');			
-	}
-	
-	public function statusToMessages($status){		
-		$messages = [];
-		$suc = []; $err = [];
-		
-		foreach ($status as $s){			
-			if ($s == status_ue__codevide)
-				$err[] = "Le code de l'UE n'est pas renseigné";
-			if ($s == status_ue__codedbl)
-				$err[] = "Le code de l'UE existe déjà";
-			if ($s == status_ue__intitulevide)
-				$err[] = "L'intitulé de l'UE n'est pas renseignée";
-			if ($s == status_ue__intituledbl)
-				$err[] = "L'intitulé de l'UE existe déjà";
-			if ($s == status_ue__idnotfnd)
-				$err[] = "L'UE n'a pas été retrouvée";	
-			if ($s == status_prob_bd) 	
-				$err[] = "Problème de base de données. Veuillez réessayer!";		
-		}
-		if (count($status) == 0)
-			$suc[] = "Succès de l'opération!";
-		
-		$messages["succes"] = $suc;
-		$messages["erreur"] = $err;
-		
-		return $messages;
-	}	
+    /**
+     * Update the specified resource in storage.
+     */
+    public function update(Request $request, string $id)
+    {
+        try{
+            $ue = UE::find($id);
+            $ue->universite_id = $request->universite_id;
+            $ue->intitule = $request->intitule;
+            $ue->description = $request->description;
+            $ue->code = $request->code;
+            $ue->volume_horaire = $request->volume_horaire;
+            $ue->save();
+            $msg = "L'enregistrement est bien passé";
+        } catch(Exception $e){
+            $msg = "Une erreur s'est produite lors de l'enregistrement";
+        }
 
-	
-	public function alreadyUsed($id){
-		return 0;
-	}
+        return redirect()->route('ues.index')->with('msg', $msg);
+    }
+
+    /**
+     * Remove the specified resource from storage.
+     */
+    public function destroy(string $id)
+    {
+        try{
+            $ue = UE::find($id);
+            $ue->delete();
+            $msg = "La suppression a été bien effectuée";
+        } catch(Exception $e){
+            $msg = "Un problème est survenu lors de la suppression";
+        }
+
+        return redirect()->route('ues.index')->with('msg', $msg);
+    }
 }

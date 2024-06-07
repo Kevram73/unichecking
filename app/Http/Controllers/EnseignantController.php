@@ -4,17 +4,11 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 
-use App\Models\TypePieceIdentite;
 use App\Models\Enseignant;
 use App\Models\Grade;
 use App\Models\Poste;
-use App\Models\Specialite;
 use App\Models\User;
-use App\Models\UE;
-use App\Models\Faculte;
 use App\Models\EnseignantGrade;
-use App\Models\EnseignantSpecialite;
-use App\Models\EnseignantUE;
 use Exception;
 
 class EnseignantController extends Controller
@@ -24,30 +18,21 @@ class EnseignantController extends Controller
      */
     public function index()
     {
-        $enseignants = Enseignant::with('grade')
-		->with('poste')
-		->with('type_piece')
-		->with('identites_bio')
-		->when($request->id, function ($query, $id) {
-			return $query->where('id', $id);
-		})->when($request->poste_id, function ($query, $poste_id) {
-			return $query->where('poste_id', $poste_id);
-		})->when($request->grade_id, function ($query, $grade_id) {
-			return $query->where('grade_id', $grade_id);
-		})->when($request->annee_id, function ($query, $annee_id) {
-			return $query->whereHas('ues', function ($query) use ($annee_id){
-				$query->with(['ue', 'faculte'])->where('annee_id', $annee_id);
-			});
-		})->when($request->nom, function ($query, $nom) {
-			return $query->where('nom', 'like', "%$nom%");
-		})->when($request->prenoms, function ($query, $prenoms) {
-			return $query->where('prenoms', 'like', "%$prenoms%");
-		})->when($request->email, function ($query, $email) {
-			return $query->where('email', 'like', "%$email%");
-		})->orderBy('nom', 'ASC')
-		->orderBy('prenoms', 'ASC');
+        $enseignants = Enseignant::all();
 
         return view('enseignants.index', compact('enseignants'));
+    }
+
+
+    public function create(){
+        $grades = Grade::all();
+        $enseignant_grades = EnseignantGrade::all();
+        $postes = Poste::all();
+        $type_pieces = TypePiece::all();
+        $users = User::all();
+
+        return view("enseignants.create", compact('grades', 'enseignant_grades', 'postes', 'type_pieces', 'users'));
+
     }
 
     /**
@@ -77,7 +62,7 @@ class EnseignantController extends Controller
     public function show(string $id)
     {
         $enseignant = Enseignant::find($id);
-        return new EnseignantResource($enseignant);
+        return view("enseignants.index", compact('enseignant'));
     }
 
     /**
@@ -85,8 +70,13 @@ class EnseignantController extends Controller
      */
     public function edit(string $id)
     {
+        $grades = Grade::all();
+        $enseignant_grades = EnseignantGrade::all();
+        $postes = Poste::all();
+        $type_pieces = TypePiece::all();
+        $users = User::all();
         $enseignant = Enseignant::find($id);
-        return view("enseignants.edit", compact('enseignant'));
+        return view("enseignants.edit", compact('enseignant', 'grades', 'enseignant_grades', 'postes', 'users', 'type_pieces'));
     }
 
     /**
