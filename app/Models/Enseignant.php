@@ -18,20 +18,23 @@ class Enseignant extends Model
     /**
      * 
      */
-    public function grade(): BelongsTo
+
+    public function fullname(){
+        return $this->nom. ' '. $this->prenoms;
+    }
+
+    public function grade()
     {
-        return $this->belongsTo(Grade::class);
+        Grade::find($this->grade_id);
     }		
     /**
      * 
      */
-    public function poste(): BelongsTo
-    {
-		$obj = new Poste();
-        return $this->belongsTo(Poste::class)
-					// ->withDefault(["id" => 0, "libelle" => ""]);
-					->withDefault((new Poste())->toArray());
-    }	 
+
+    public function poste(){
+        Poste::find($this->poste_id);
+    }
+    
     /**
      * 
      */

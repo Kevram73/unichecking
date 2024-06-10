@@ -21,7 +21,7 @@
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
 </head>
 
-<body>
+<body style="background-image: url({{ asset('img/universites-du-togo1.jpg')}})">
     <main class="d-flex w-100">
         <div class="container d-flex flex-column">
             <div class="row vh-100">
@@ -29,8 +29,8 @@
                     <div class="d-table-cell align-middle">
 
                         <div class="text-center mt-4">
-                            <p class="lead">
-                                Connectez vous pour continuer.
+                            <p class="lead" style="color: white;">
+                                Veuillez fournir votre email.
                             </p>
                         </div>
 
@@ -38,26 +38,28 @@
                             <div class="card-body">
                                 <div class="m-sm-4">
                                     <div class="text-center">
-                                        <img src="{{ asset('assets/img/avatars/avatar.jpg')}}" alt="Charles Hall"
-                                            class="img-fluid rounded-circle" width="132" height="132" />
+                                        <h2 style="color: green; font-size: 24px;">UNI-CHECK</h2>
                                     </div>
-                                    <form action="{{ route('user.login') }}">
+                                    <div class="text-center">
+                                        <p style="color: red;">@if(Session::has('error'))
+                                            {{session('error')}}
+                                        @endif</p>
+                                        <p style="color: green ">@if(Session::has('success'))
+                                            {{session('success')}}
+                                        @endif</p>
+                                    </div>
+                                    <form action="{{ route('fpwd') }}" method="POST">
                                         @csrf
                                         <div class="mb-3">
                                             <label class="form-label">Adresse email</label>
                                             <input class="form-control form-control-lg" type="email" name="email"
                                                 placeholder="Entrez votre email" />
                                         </div>
-                                        <div class="mb-3">
-                                            <label class="form-label">Mot de passe</label>
-                                            <input class="form-control form-control-lg" type="password" name="password"
-                                                placeholder="Entrez votre mot de passe" />
-
-                                        </div>
                                         <div class="text-center mt-3">
                                             {{-- <a href="index.html" class="btn btn-lg btn-primary">Sign in</a> --}}
-                                            <button type="submit" class="btn btn-lg btn-primary">Se connecter</button>
+                                            <button type="submit" class="btn btn-lg" style="background-color: green; color: white;">Envoyez</button>
                                         </div>
+
                                     </form>
                                 </div>
                             </div>

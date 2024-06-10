@@ -21,15 +21,15 @@ class Deplacement extends Model
      */
     public function enseignant(): BelongsTo
     {
-        return $this->belongsTo(Enseignant::class);
+        return Enseignant::find($this->enseignant->id);
     }
 
     /**
      *
      */
-    public function type(): BelongsTo
+    public function type()
     {
-        return $this->belongsTo(TypeDeplacement::class, 'type_deplacement_id');
+        return TypeDeplacement::find($this->type_deplacement_id);
     }
 
 	public function annee() : BelongsTo
