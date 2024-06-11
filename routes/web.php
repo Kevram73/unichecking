@@ -47,7 +47,7 @@ Route::resource('postes', PosteController::class);
 Route::resource('specialites', SpecialiteController::class);
 Route::resource('seances', SeanceController::class);
 Route::resource('type_deplacements', TypeDeplacementController::class);
-Route::resource('type_pieces', TypePieceController::class);
+Route::resource('type_pieces', TypePieceIdentiteController::class);
 Route::resource('ues', UEController::class);
 Route::resource('universites', UniversiteController::class);
 

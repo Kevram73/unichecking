@@ -17,8 +17,11 @@ class Poste extends Model
 	/**
      *
      */
-    public function categorie(): BelongsTo
+    public function categorie()
     {
-        return $this->belongsTo(CategoriePoste::class, 'categorie_poste_id');
+        $categorie = CategoriePoste::find($this->categorie_poste_id);
+        if($categorie == null)
+            return "";
+        return $categorie->libelle;
     }
 }

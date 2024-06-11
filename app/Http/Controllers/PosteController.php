@@ -14,8 +14,9 @@ class PosteController extends Controller
      */
     public function index()
     {
-        $postes = Poste::with('categorie')->get();
-        return view('postes.index', compact('postes'));
+        $postes = Poste::all();
+        $categories = CategoriePoste::all();
+        return view('postes.index', compact('postes', 'categories'));
     }
 
     /**

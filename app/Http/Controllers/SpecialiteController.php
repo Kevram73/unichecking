@@ -18,76 +18,62 @@ class SpecialiteController extends Controller
     }
 
     /**
-     * Show the form for creating a new specialty.
-     */
-    public function create()
-    {
-        return view('specialites.create');
-    }
-
-    /**
      * Store a newly created specialty in storage.
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:specialites,code',
-            'intitule' => 'required|string|max:255'
-        ]);
-
         try {
-            $specialite = new Specialite($validated);
+            $specialite = new Specialite();
+            $specialite->code = $request->code;
+            $specialite->intitule = $request->intitule;
+            $specialite->created_at = now();
             $specialite->save();
-            return redirect()->route('specialites.index')->with('success', 'Specialty created successfully.');
+            $msg = "La spécialité a bien été enregistrée";
+            $error = false;
         } catch (Exception $e) {
-            return back()->withErrors('An error occurred while saving the specialty.');
+            $msg  = "Une erreur s'est produite";
+            $error = true;
         }
+
+        return redirect()->route('specialites.index')->with(['msg' => $msg, 'error' => $error]);
     }
 
-    /**
-     * Display the specified specialty.
-     */
-    public function show(Specialite $specialite)
-    {
-        return view('specialites.show', compact('specialite'));
-    }
-
-    /**
-     * Show the form for editing the specified specialty.
-     */
-    public function edit(Specialite $specialite)
-    {
-        return view('specialites.edit', compact('specialite'));
-    }
 
     /**
      * Update the specified specialty in storage.
      */
-    public function update(Request $request, Specialite $specialite)
+    public function update(Request $request, int $id)
     {
-        $validated = $request->validate([
-            'code' => 'required|string|max:255|unique:specialites,code,' . $specialite->id,
-            'intitule' => 'required|string|max:255'
-        ]);
-
         try {
-            $specialite->update($validated);
-            return redirect()->route('specialites.index')->with('success', 'Specialty updated successfully.');
+            $specialite = Specialite::find($id);
+            $specialite->code = $request->code;
+            $specialite->intitule = $request->intitule;
+            $specialite->created_at = now();
+            $specialite->save();
+            $msg = "La spécialité a bien été enregistrée";
+            $error = false;
         } catch (Exception $e) {
-            return back()->withErrors('An error occurred while updating the specialty.');
+            $msg  = "Une erreur s'est produite";
+            $error = true;
         }
+
+        return redirect()->route('specialites.index', compact('msg'));
     }
 
     /**
      * Remove the specified specialty from storage.
      */
-    public function destroy(Specialite $specialite)
+    public function destroy(int $id)
     {
         try {
+            $specialite = Specialite::find($id);
             $specialite->delete();
-            return redirect()->route('specialites.index')->with('success', 'Specialty deleted successfully.');
+
+            $msg = "La spécialité a bien été supprimée";
         } catch (Exception $e) {
-            return back()->withErrors('An error occurred while deleting the specialty.');
+            $msg = "Une erreur est survenue lorsde la suppression";
         }
+
+        return redirect()->route("specialites.index")->with('msg', $msg);
     }
 }
