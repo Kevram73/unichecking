@@ -35,7 +35,7 @@
             </li>
 
             <li class="sidebar-item">
-                <a class="sidebar-link" href="">
+                <a class="sidebar-link" href="{{ route('deplacements.index') }}">
                     <i class="align-middle fa fa-table"></i> <span class="align-middle">Prog d'indisponibilité</span>
                 </a>
             </li>

@@ -27,7 +27,9 @@ class AnneeController extends Controller
         $annee = new Annee();
         $annee->date_debut = $request->date_debut;
         $annee->date_fin = $request->date_fin;
-        $annee->libelle = $request->date_debut + " - " + $request->date_fin;
+        $annee->libelle = "$request->date_debut" . " - " . "$request->date_fin";
+        $annee->open = false;
+        $annee->openable = false;
         $annee->save();
 
         return redirect()->route('annees.index');

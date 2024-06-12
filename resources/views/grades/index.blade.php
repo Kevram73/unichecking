@@ -16,7 +16,7 @@
         <div class="container-fluid p-0">
             <div class="row justify-space-between pb-4">
                 <div class="col">
-                    <h1 class="h3 mb-3">Grades</h1>
+                    <h1 class="h3 mb-3">Fonction</h1>
                 </div>
                 <div class="col d-flex justify-content-end">
                     <button type="button" class="btn btn-primary" id="show-add-modal">
@@ -25,7 +25,7 @@
 
                     <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                            <h4 class="h4" style="padding-top: 8px;">Ajouter une grade</h4>
+                            <h4 class="h4" style="padding-top: 8px;">Ajouter une fonction</h4>
                             <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
                         </div>
 
@@ -73,14 +73,14 @@
                             <div class="col-sm-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <table class="table mb-0">
+                                        <table class="table mb-0" id="myTable">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">N°</th>
-                                                    <th class="text-center">Intitulé</th>
-                                                    <th class="text-center">Volume horaire</th>
-                                                    <th class="text-center">Créé le</th>
-                                                    <th class="text-center">Action</th>
+                                                    <th class="text-left">N°</th>
+                                                    <th class="text-left">Intitulé</th>
+                                                    <th class="text-left">Volume horaire</th>
+                                                    <th class="text-left">Créé le</th>
+                                                    <th class="text-left">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -92,11 +92,11 @@
                                                 @endif
                                                 @foreach ($grades as $grade)
                                                     <tr>
-                                                        <td class="text-center">{{ $loop->index + 1 }}</td>
-                                                        <td class="text-center">{{ $grade->intitule }}</td>
-                                                        <td class="text-center">{{ $grade->volume_horaire }}</td>
-                                                        <td class="text-center">{{ $grade->created_at }}</td>
-                                                        <td class="text-center">
+                                                        <td class="text-left">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-left">{{ $grade->intitule }}</td>
+                                                        <td class="text-left">{{ $grade->volume_horaire }}</td>
+                                                        <td class="text-left">{{ $grade->created_at }}</td>
+                                                        <td class="text-left">
                                                             <button type="button" class="btn btn-sm btn-primary" id="editButton-{{ $grade->id }}"><i class="fa fa-edit"></i></button>
                                                             <button type="button" class="btn btn-sm btn-danger" id="deleteButton-{{ $grade->id }}"><i class="fa fa-trash"></i></button>
                                                         </td>
@@ -105,7 +105,7 @@
                                                         <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="edit-modal-{{ $grade->id }}">
                                                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                                                 <h4 class="h4" style="padding-top: 8px;">Editer une grade</h4>
-                                                                <button class="btn btn-danger" id="close-edit-modal-{{ $grade->id }}"><i class="fa fa-close" ></i></button>
+                                                                <button class="btn btn-danger" onclick="closeEditModalById({{ $grade->id }})"><i class="fa fa-close" ></i></button>
                                                             </div>
                                                             <hr/>
                                                             <form action="{{ route('grades.update', $grade->id) }}" method="POST">
@@ -129,7 +129,7 @@
                                                         <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="delete-modal-{{ $grade->id }}">
                                                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                                                 <h4 class="h4" style="padding-top: 8px;">Supprimer une grade</h4>
-                                                                <button class="btn btn-danger" id="close-delete-modal-{{ $grade->id }}"><i class="fa fa-close" ></i></button>
+                                                                <button class="btn btn-danger" onclick="closeDeleteModalById({{ $grade->id }})"><i class="fa fa-close" ></i></button>
                                                             </div>
                                                             <hr/>
                                                             <form action="{{ route('grades.destroy', $grade->id) }}" method="POST">

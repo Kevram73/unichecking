@@ -25,7 +25,7 @@
 
                     <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                            <h4 class="h4" style="padding-top: 8px;">Ajouter une faculté</h4>
+                            <h4 class="h4" style="padding-top: 8px;">Ajouter une poste</h4>
                             <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
                         </div>
 
@@ -34,14 +34,14 @@
                             @csrf
                             <div class="mt-4">
                                 <label for="libelle">Libellé</label>
-                                <input type="text" class="form-control" name="code" placeholder="Libellé de la faculté"
+                                <input type="text" class="form-control" name="code" placeholder="Libellé de la poste"
                                     required>
                             </div>
                             <div class="mt-4">
                                 <label for="categorie">Catégorie de poste</label>
-                                <select name="categorie_poste_id" id="categorie_poste_id">
+                                <select name="categorie_poste_id" id="categorie_poste_id" class="form-control">
                                     @foreach ($categories as $categorie)
-                                    <option value="{{ $categorie->id }}">{{ $categorie->libelle }}</option>
+                                    <option value="{{ $categorie->id }}" >{{ $categorie->libelle }}</option>
                                     @endforeach
                                 </select>
                             </div>
@@ -79,27 +79,25 @@
                                         <table class="table mb-0" id="myTable">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">N°</th>
-                                                    <th class="text-center">Libellé</th>
-                                                    <th class="text-center">Catégorie</th>
-                                                    <th class="text-center">Créé le</th>
-                                                    <th class="text-center">Action</th>
+                                                    <th class="text-left">N°</th>
+                                                    <th class="text-left">Libellé</th>
+                                                    <th class="text-left">Catégorie</th>
+                                                    <th class="text-left">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @if (count($postes) < 1)
                                                     <tr>
-                                                        <td colspan="8" class="text-center">Aucune faculté enregistrée
+                                                        <td colspan="8" class="text-center">Aucune poste enregistrée
                                                             pour le moment</td>
                                                     </tr>
                                                 @endif
                                                 @foreach ($postes as $poste)
                                                     <tr>
-                                                        <td class="text-center">{{ $loop->index + 1 }}</td>
-                                                        <td class="text-center">{{ $poste->libelle }}</td>
-                                                        <td class="text-center">{{ $poste->categorie() }}</td>
-                                                        <td class="text-center">{{ $poste->created_at }}</td>
-                                                        <td class="text-center">
+                                                        <td class="text-left">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-left">{{ $poste->libelle }}</td>
+                                                        <td class="text-left">{{ $poste->categorie() }}</td>
+                                                        <td class="text-left">
                                                             <button type="button" class="btn btn-sm btn-primary" id="editButton-{{ $poste->id }}"><i class="fa fa-edit"></i></button>
                                                             <button type="button" class="btn btn-sm btn-danger" id="deleteButton-{{ $poste->id }}"><i class="fa fa-trash"></i></button>
                                                         </td>
@@ -108,7 +106,7 @@
                                                         <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="edit-modal-{{ $poste->id }}">
                                                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                                                 <h4 class="h4" style="padding-top: 8px;">Editer un poste</h4>
-                                                                <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close" ></i></button>
+                                                                <button class="btn btn-danger" onclick="closeEditModalById({{ $poste->id }})"><i class="fa fa-close" ></i></button>
                                                             </div>
                                                             <hr/>
                                                             <form action="{{ route('postes.update', $poste->id) }}" method="POST">
@@ -122,7 +120,7 @@
                                                                     <label for="libelle">Catégorie</label>
                                                                     <select name="categorie_poste_id" class="form-control">
                                                                         @foreach($categories as $categorie)
-                                                                        <option value="{{ $categorie->id }}">{{ $categorie->libelle }}</option>
+                                                                        <option value="{{ $categorie->id }}" @if($categorie->id == $poste->categorie_poste_id) selected @endif>{{ $categorie->libelle }}</option>
                                                                         @endforeach
                                                                     </select>
                                                                 </div>
@@ -135,8 +133,8 @@
                                                         <!-- Delete Faculty Dialog -->
                                                         <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="delete-modal-{{ $poste->id }}">
                                                             <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                                                <h4 class="h4" style="padding-top: 8px;">Supprimer un poste/h4>
-                                                                <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close" ></i></button>
+                                                                <h4 class="h4" style="padding-top: 8px;">Supprimer un poste</h4>
+                                                                <button class="btn btn-danger" onclick="closeDeleteModalById({{ $poste->id }})"><i class="fa fa-close" ></i></button>
                                                             </div>
                                                             <hr/>
                                                             <form action="{{ route('postes.destroy', $poste->id) }}" method="POST">
@@ -165,11 +163,6 @@
             </div>
         </div>
     </main>
-    <script>
-        let table = new DataTable('#myTable', {
-            responsive: true
-        });
-    </script>
     <script>
         const dialog = document.querySelector("#add-modal");
         const showButton = document.querySelector("#show-add-modal");

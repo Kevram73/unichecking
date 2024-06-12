@@ -76,11 +76,10 @@
                                         <table class="table mb-0" id="myTable">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">N°</th>
-                                                    <th class="text-center">Code</th>
-                                                    <th class="text-center">Libellé</th>
-                                                    <th class="text-center">Créé le</th>
-                                                    <th class="text-center">Action</th>
+                                                    <th class="text-left">N°</th>
+                                                    <th class="text-left">Code</th>
+                                                    <th class="text-left">Libellé</th>
+                                                    <th class="text-left">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
@@ -92,11 +91,10 @@
                                                 @endif
                                                 @foreach ($facultes as $faculte)
                                                     <tr>
-                                                        <td class="text-center">{{ $loop->index + 1 }}</td>
-                                                        <td class="text-center">{{ $faculte->code }}</td>
-                                                        <td class="text-center">{{ $faculte->libelle }}</td>
-                                                        <td class="text-center">{{ $faculte->created_at }}</td>
-                                                        <td class="text-center">
+                                                        <td class="text-left">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-left">{{ $faculte->code }}</td>
+                                                        <td class="text-left">{{ $faculte->libelle }}</td>
+                                                        <td class="text-left">
                                                             <button type="button" class="btn btn-sm btn-primary" id="editButton-{{ $faculte->id }}"><i class="fa fa-edit"></i></button>
                                                             <button type="button" class="btn btn-sm btn-danger" id="deleteButton-{{ $faculte->id }}"><i class="fa fa-trash"></i></button>
                                                         </td>

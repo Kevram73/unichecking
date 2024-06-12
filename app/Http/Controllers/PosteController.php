@@ -20,22 +20,13 @@ class PosteController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $categories = CategoriePoste::all();
-        return view('postes.create', compact('categories'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
     {
         $validated = $request->validate([
             'libelle' => 'required|string|max:255',
-            'categorie_poste_id' => 'required|exists:categorie_postes,id'
+            'categorie_poste_id' => 'required|exists:categorieposte,id'
         ]);
 
         try {
@@ -48,30 +39,13 @@ class PosteController extends Controller
     }
 
     /**
-     * Display the specified resource.
-     */
-    public function show(Poste $poste)
-    {
-        return view('postes.show', compact('poste'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Poste $poste)
-    {
-        $categories = CategoriePoste::all();
-        return view('postes.edit', compact('poste', 'categories'));
-    }
-
-    /**
      * Update the specified resource in storage.
      */
     public function update(Request $request, Poste $poste)
     {
         $validated = $request->validate([
             'libelle' => 'required|string|max:255',
-            'categorie_poste_id' => 'required|exists:categorie_postes,id'
+            'categorie_poste_id' => 'required|exists:categorieposte,id'
         ]);
 
         try {

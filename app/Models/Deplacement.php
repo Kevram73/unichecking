@@ -19,9 +19,12 @@ class Deplacement extends Model
     /**
      *
      */
-    public function enseignant(): BelongsTo
+    public function enseignant()
     {
-        return Enseignant::find($this->enseignant->id);
+        $enseignant = Enseignant::find($this->enseignant_id);
+        if($enseignant == null)
+            return "";
+        return $enseignant->nom . " " . $enseignant->prenom;
     }
 
     /**

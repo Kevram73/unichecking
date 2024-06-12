@@ -22,33 +22,27 @@
                             <div class="col-sm-12">
                                 <div class="card">
                                     <div class="card-body">
-                                        <table class="table mb-0">
+                                        <table class="table mb-0" id="myTable">
                                             <thead>
                                                 <tr>
-                                                    <th class="text-center">ID</th>
-                                                    <th class="text-center">Nom</th>
-                                                    <th class="text-center">Prénoms</th>
-                                                    <th class="text-center">Fonction</th>
-                                                    <th class="text-center">Poste</th>
-                                                    <th class="text-center">Détails</th>
-                                                    <th class="text-center">Adresse Email</th>
-                                                    <th class="text-center">Créé le</th>
-                                                    <th class="text-center">Action</th>
+                                                    <th class="text-left">ID</th>
+                                                    <th class="text-left">Nom</th>
+                                                    <th class="text-left">Prénoms</th>
+                                                    <th class="text-left">Fonction</th>
+                                                    <th class="text-left">Poste</th>
+                                                    <th class="text-left">Action</th>
                                                 </tr>
                                             </thead>
                                             <tbody>
                                                 @foreach ($enseignants as $enseignant)
                                                     <tr>
-                                                        <td class="text-center">{{ $enseignant->id }}</td>
-                                                        <td class="text-center">{{ $enseignant->nom }}</td>
-                                                        <td class="text-center">{{ $enseignant->prenoms }}</td>
-                                                        <td class="text-center">{{ $enseignant->grade()->intitule }}</td>
-                                                        <td class="text-center">{{ $enseignant->poste()->libelle }}</td>
-                                                        <td class="text-center">{{ $enseignant->detail_poste }}</td>
-                                                        <td class="text-center">{{ $enseignant->email }}</td>
-                                                        <td class="text-center">{{ $enseignant->created_at }}</td>
-                                                        <td class="text-center">
-                                                            <button type="button" class="btn btn-primary"
+                                                        <td class="text-left">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-left">{{ $enseignant->nom }}</td>
+                                                        <td class="text-left">{{ $enseignant->prenoms }}</td>
+                                                        <td class="text-left">{{ $enseignant->grade() }}</td>
+                                                        <td class="text-left">{{ $enseignant->poste() }}</td>
+                                                        <td class="text-left">
+                                                            <button type="button" class="btn btn-sm btn-primary"
                                                                 data-bs-toggle="modal"
                                                                 data-bs-target="#editModal-{{ $enseignant->id }}"><i
                                                                     class="fa fa-edit"></i></button>

@@ -19,15 +19,6 @@ class UEController extends Controller
     }
 
     /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        $universites = Universite::all();
-        return view('ues.create', compact('universites'));
-    }
-
-    /**
      * Store a newly created resource in storage.
      */
     public function store(Request $request)
@@ -48,24 +39,6 @@ class UEController extends Controller
         return redirect()->route('ues.index')->with('msg', $msg);
     }
 
-    /**
-     * Display the specified resource.
-     */
-    public function show(string $id)
-    {
-        $ue = UE::find($id);
-        return view('ues.show', compact('ue'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(string $id)
-    {
-        $universites = Universite::all();
-        $ue = UE::find($id);
-        return view('ues.edit', compact('universites', 'ue'));
-    }
 
     /**
      * Update the specified resource in storage.

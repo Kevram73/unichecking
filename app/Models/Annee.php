@@ -11,6 +11,10 @@ class Annee extends Model
 {
     use HasFactory;
 	protected $table = 'Annee';
-	
+
 	protected $fillable = ['libelle', 'date_debut', 'date_fin', 'open', 'openable'];
+
+    public function open(){
+        return $this->open && $this->openable ? "En cours" : "Fermé";
+    }
 }

@@ -14,16 +14,10 @@ class TypeDeplacementController extends Controller
     public function index()
     {
         $types = TypeDeplacement::all();
-        return view('types.index', compact('types'));
+        return view('type_deplacements.index', compact('types'));
     }
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        return view('types.create');
-    }
+
 
     /**
      * Store a newly created resource in storage.
@@ -31,32 +25,16 @@ class TypeDeplacementController extends Controller
     public function store(Request $request)
     {
         $validated = $request->validate([
-            'designation' => 'required|string|max:255|unique:type_deplacements,designation',
+            'designation' => 'required|string|max:255|unique:TypeDeplacement,designation',
         ]);
 
         try {
             $type = new TypeDeplacement($validated);
             $type->save();
-            return redirect()->route('types.index')->with('success', 'Type of displacement created successfully.');
+            return redirect()->route('type_deplacements.index')->with('success', 'Type of displacement created successfully.');
         } catch (Exception $e) {
             return back()->withErrors('An error occurred while saving the type of displacement.');
         }
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(TypeDeplacement $type)
-    {
-        return view('types.show', compact('type'));
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(TypeDeplacement $type)
-    {
-        return view('types.edit', compact('type'));
     }
 
     /**
@@ -65,12 +43,12 @@ class TypeDeplacementController extends Controller
     public function update(Request $request, TypeDeplacement $type)
     {
         $validated = $request->validate([
-            'designation' => 'required|string|max:255|unique:type_deplacements,designation,' . $type->id,
+            'designation' => 'required|string|max:255|unique:TypeDeplacement,designation,',
         ]);
 
         try {
             $type->update($validated);
-            return redirect()->route('types.index')->with('success', 'Type of displacement updated successfully.');
+            return redirect()->route('type_deplacements.index')->with('success', 'Type of displacement updated successfully.');
         } catch (Exception $e) {
             return back()->withErrors('An error occurred while updating the type of displacement.');
         }
@@ -83,7 +61,7 @@ class TypeDeplacementController extends Controller
     {
         try {
             $type->delete();
-            return redirect()->route('types.index')->with('success', 'Type of displacement deleted successfully.');
+            return redirect()->route('type_deplacements.index')->with('success', 'Type of displacement deleted successfully.');
         } catch (Exception $e) {
             return back()->withErrors('An error occurred while deleting the type of displacement.');
         }
