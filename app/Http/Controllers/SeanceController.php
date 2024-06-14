@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faculte;
+use App\Models\Filiere;
 use App\Models\Seance;
 use App\Models\Annee;
 use App\Models\Universite;
@@ -24,14 +26,23 @@ class SeanceController extends Controller
     /**
      * Show the form for creating a new resource.
      */
-    public function create()
+    public function choose_enseignant(Request $request)
     {
-        $annees = Annee::all();
-        $universites = Universite::all();
         $enseignants = Enseignant::all();
-        $ues = UE::all();
-        $enseignantUes = EnseignantUE::all();
-        return view('seances.create', compact('annees', 'universites', 'enseignants', 'ues', 'enseignantUes'));
+
+        return view('seances.choose_enseignant', compact('enseignants'));
+    }
+
+    public function choice(Request $request, $id){
+        $enseignant = Enseignant::find($id);
+        $facultes = Faculte::all();
+        return view('seances.create', compact('enseignant', 'facultes'));
+    }
+
+    public function getFilieres($id)
+    {
+        $filieres = Filiere::where('faculte_id', $id)->pluck('nom', 'id');
+        return json_encode($filieres);
     }
 
     /**
@@ -39,21 +50,7 @@ class SeanceController extends Controller
      */
     public function store(Request $request)
     {
-        $validated = $request->validate([
-            'annee_id' => 'required|exists:annees,id',
-            'universite_id' => 'required|exists:universites,id',
-            'enseignant_id' => 'required|exists:enseignants,id',
-            'ue_id' => 'required|exists:ues,id',
-            'enseignant_ue_id' => 'required|exists:enseignant_ues,id',
-            'jour_semaine' => 'required|string',
-            'heure_debut' => 'required|date_format:H:i',
-            'heure_fin' => 'required|date_format:H:i',
-            'date_debut' => 'required|date',
-            'date_fin' => 'required|date|after_or_equal:date_debut'
-        ]);
 
-        Seance::create($validated);
-        return redirect()->route('seances.index')->with('success', 'Session successfully created.');
     }
 
     /**

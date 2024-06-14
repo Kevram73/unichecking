@@ -11,21 +11,21 @@ class Faculte extends Model
 {
     use HasFactory;
 	protected $table = 'Faculte';
-	
+
 	protected $fillable = ['code', 'libelle'];
- 
+
 	/**
-     * 
+     *
      */
     public function ues(): HasMany
     {
         return $this->hasMany(FaculteUE::class);
-    }	 
+    }
 	/**
-     * 
+     *
      */
     public function filieres(): HasMany
     {
         return $this->hasMany(Filiere::class);
-    }	 
+    }
 }

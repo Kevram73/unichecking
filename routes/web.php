@@ -51,7 +51,9 @@ Route::resource('type_pieces', TypePieceIdentiteController::class);
 Route::resource('ues', UEController::class);
 Route::resource('universites', UniversiteController::class);
 
-
+Route::get('/enseignant/choose', [SeanceController::class, 'choose_enseignant'])->name('seance.choose');
+Route::get('/enseignant/choose/{id}', [SeanceController::class, 'choice'])->name('seance.choice');
+Route::get('/filieres/get/{id}', [SeanceController::class, 'getFilieres'])->name('seance.filiere');
 
 // Route::prefix('annees')->group(function () {
 //     Route::get('/', [AnneeController::class, 'index']);

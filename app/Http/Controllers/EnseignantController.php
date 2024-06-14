@@ -2,6 +2,9 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Faculte;
+use App\Models\Specialite;
+use App\Models\TypePieceIdentite;
 use Illuminate\Http\Request;
 
 use App\Models\Enseignant;
@@ -28,10 +31,12 @@ class EnseignantController extends Controller
         $grades = Grade::all();
         $enseignant_grades = EnseignantGrade::all();
         $postes = Poste::all();
-        $type_pieces = TypePiece::all();
+        $type_pieces = TypePieceIdentite::all();
+        $specialites = Specialite::all();
+        $facultes = Faculte::all();
         $users = User::all();
 
-        return view("enseignants.create", compact('grades', 'enseignant_grades', 'postes', 'type_pieces', 'users'));
+        return view("enseignants.create", compact('facultes','grades', 'enseignant_grades', 'postes', 'type_pieces', 'users', 'specialites'));
 
     }
 
@@ -44,16 +49,23 @@ class EnseignantController extends Controller
         $enseignant->nom = $request->nom;
         $enseignant->prenoms = $request->prenoms;
         $enseignant->email = $request->email;
-        $enseignant->grade_id = $request->grade_id;
-        $enseignant->poste_id = $request->poste_id;
-        $enseignant->enseignant_grade_id = $request->enseignant_grade_id;
-        $enseignant->type_piece_id = $request->type_piece_id;
-        $enseignant->detail_poste = $request->detail_poste;
-        $enseignant->user_id = $request->user_id;
-        $enseignant->nb_hr_cum = $request->nb_hr_cum;
+        $enseignant->grade_id = $request->grade;
+        $enseignant->poste_id = $request->poste;
+        $enseignant->type_piece_id = $request->type_piece;
+        $enseignant->detail_poste = $request->details_poste;
         $enseignant->save();
 
-        return redirect()->route('enseignants');
+        $enseignant_grade = new EnseignantGrade();
+        $enseignant_grade->grade_id = $request->grade_id;
+        $enseignant_grade->enseignant_id = $enseignant->id;
+        $enseignant_grade->poste_id = $request->poste_id;
+        $enseignant_grade->annee_id = 6;
+        $enseignant_grade->vol_hor_tot = 0;
+        $enseignant_grade->save();
+
+
+
+        return redirect()->route('enseignants.index');
     }
 
     /**

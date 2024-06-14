@@ -15,43 +15,58 @@
         <div class="container-fluid p-0">
 
             <div class="mb-3">
-                <h1 class="h3 d-inline align-middle">Enregistrement d'un enseignant</h1>
+                <h1 class="h3 d-inline align-middle">Enregistrement d'une séance</h1>
 
             </div>
             <div class="row">
                 <div class="col-12 col-md-12">
-                    <form action="{{ route('enseignants.store') }}" method="POST" enctype="multipart/form-data">
-                        @csrf
-                        <div class="card">
+                    <div class="card">
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="nom">Nom</label>
-                                    <input type="text" class="form-control" name="nom" required>
+                                    <label for="nom">Nom et prénoms</label>
+                                    <input type="text" class="form-control" value="{{ $enseignant->nom }} {{ $enseignant->prenoms }}" name="nom" readonly>
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="nom">Prénoms</label>
-                                    <input type="text" class="form-control" name="prenoms" required>
+                                    <label for="prenoms">Unité d'enseignement</label>
+                                    <select name="ue" id="ue" class="form-control">
+                                        <option value="MTH-300">Statistiques et probabilités</option>
+                                    </select>
                                 </div>
                             </div>
                         </div>
                         <div class="row" style="margin-top: -10px;">
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="nom">Email</label>
-                                    <input type="email" class="form-control" name="email" required>
+                                    <label for="nom">Jour de semaine</label>
+                                    <select name="jour_semaine" id="jour_semaine" class="form-control">
+                                        <option>Sélectionnez un jour de la semaine</option>
+                                        <option value="1">Lundi</option>
+                                        <option value="2">Mardi</option>
+                                        <option value="3">Mercredi</option>
+                                        <option value="4">Jeudi</option>
+                                        <option value="5">Vendredi</option>
+                                        <option value="6">Samedi</option>
+                                        <option value="7">Dimanche</option>
+                                    </select>
+                                </div>
+                            </div>
+
+                        </div>
+
+                        <div class="row">
+                            <div class="col-md-6">
+                                <div class="card-body">
+                                    <label for="heure_debut">Heure de début</label>
+                                    <input type="time" class="form-control" name="heure_debut">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="nom">Fonction</label>
-                                    <select name="fonction" id="fonction" class="form-control" required>
-                                        @foreach($grades as $grade)
-                                            <option value="{{ $grade->id }}">{{ $grade->intitule }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="heure_fin">Heure de fin</label>
+                                    <input type="time" class="form-control" name="heure_fin">
                                 </div>
                             </div>
                         </div>
@@ -59,55 +74,74 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="poste">Poste</label>
-                                    <select name="poste" id="poste" class="form-control" required>
-                                        @foreach($postes as $poste)
-                                            <option>Choisissez le poste</option>
-                                            <option value="{{ $poste->id }}">{{ $poste->libelle }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="date_debut">Date de début</label>
+                                    <input type="date" class="form-control" name="heure_debut">
                                 </div>
                             </div>
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="details_poste">Détails poste</label>
-                                    <input type="text" class="form-control" name="details_poste" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="poste">Spécialité</label>
-                                    <select name="specialite[]" id="specialite" class="form-control" multiple required>
-                                        <option>Choisissez la spécialité</option>
-                                        @foreach($specialites as $spec)
-                                            <option value="{{ $spec->id }}">{{ $spec->code }} - {{ $spec->intitule }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="piece_identite">Type pièce d'identité</label>
-                                    <select name="type_piece" id="type_piece" class="form-control" required>
-                                        <option>Choisissez la pièce</option>
-                                        @foreach($type_pieces as $type)
-                                            <option value="{{ $type->id }}">{{ $type->libelle }}</option>
-                                        @endforeach
-                                    </select>
+                                    <label for="date_fin">Date de fin</label>
+                                    <input type="date" class="form-control" name="heure_fin">
                                 </div>
                             </div>
                         </div>
                         <div class="row">
-                            <div class="col-md-6">
+                            <div class="col-md-12">
                                 <div class="card-body">
-                                    <label for="piece_identite">Pièce d'identité</label>
-                                    <input type="file" class="form-control" name="piece_identite" accept="image/jpeg,image/gif,image/png,application/pdf,image/x-eps" required>
+                                    <table class="table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <td class="text-left">Faculté</td>
+                                                <td class="text-center">Filière</td>
+                                                <td class="text-center">Semestre</td>
+                                                <td class="text-center"><button class="btn btn-success" id="show-add-modal">Ajouter</button></td>
+                                                <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
+                                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                                        <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
+                                                        <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
+                                                    </div>
+
+                                                    <hr />
+                                                    <form action="{{ route('filieres.store') }}" method="POST">
+                                                        @csrf
+                                                        <div class="mt-4">
+                                                            <label for="code">Faculté</label>
+                                                            <select name="faculte" id="faculte" class="form-control">
+                                                                @foreach($facultes as $faculte)
+                                                                    <option value="{{ $faculte->id }}">{{ $faculte->libelle  }}</option>
+                                                                @endforeach
+                                                            </select>
+
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <label for="code">Filière</label>
+                                                            <select name="filiere" id="filiere" class="form-control">
+
+                                                            </select>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <label for="code">Semestre</label>
+                                                            <input type="number" class="form-control" name="semester" placeholder="Semestre" min="1" max="10"
+                                                                   required>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <button class="btn btn-success" type="submit">Enregistrer</button>
+                                                        </div>
+                                                    </form>
+
+                                                </dialog>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td class="text-center" colspan="4">
+                                                    Aucune filière sélectionnée
+                                                </td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
-
                         </div>
                         <div class="row">
                             <div class="col-md-12">
@@ -119,7 +153,6 @@
 
                         </div>
                     </div>
-                    </form>
                 </div>
             </div>
 
@@ -174,10 +207,10 @@
                                         <hr/>
                                         <form method="POST">
                                             @csrf
-                    @method('PUT')
-                    <div class="mt-4">
-                        <label for="code">Code</label>
-                        <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>
+                                            @method('PUT')
+                                            <div class="mt-4">
+                                                <label for="code">Code</label>
+                                                <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>
                                             </div>
                                             <div class="mt-4">
                                                 <label for="code">Intitulé</label>

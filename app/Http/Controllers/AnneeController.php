@@ -24,15 +24,25 @@ class AnneeController extends Controller
      */
     public function store(AnneeRequest $request)
     {
+
+        $isExistingYear = Annee::where('open', true)->get();
+        if(count($isExistingYear) > 0){
+            return back()->with('msg', 'Une année est déjà en cours, veuillez fermer avant de continuer');
+        }
+        $isOpenable = Annee::where('openable', true)->get();
+        if(count($isOpenable) > 0){
+            return back()->with('msg', 'Une année ouvrable existe déjà');
+        }
+
         $annee = new Annee();
         $annee->date_debut = $request->date_debut;
         $annee->date_fin = $request->date_fin;
         $annee->libelle = "$request->date_debut" . " - " . "$request->date_fin";
-        $annee->open = false;
-        $annee->openable = false;
+        $annee->open = true;
+        $annee->openable = true;
         $annee->save();
 
-        return redirect()->route('annees.index');
+        return redirect()->route( 'annees.index');
     }
 
     /**
