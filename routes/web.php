@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\HelpController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -25,17 +26,22 @@ use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
 
 
+
 Route::get('/', [AuthController::class, 'login_get'])->name('login');
 Route::post('/login', [AuthController::class, 'login_post'])->name('auth.login');
 Route::get('/forgot/password', [AuthController::class, 'forget_pwd_get'])->name('forgot_password');
 Route::post('/forgot/password', [AuthController::class, 'forget_pwd_post'])->name('fpwd');
 Route::get('/reset/password/{token}', [AuthController::class, 'reset_pwd_get'])->name('reset_password');
 Route::post('/reset/password', [AuthController::class, 'reset_pwd_post'])->name('reset_pwd');
-
+Route::get('/profile', [AuthController::class, 'profile'])->middleware('auth')->name('auth.profile');
+Route::get('/params', [AuthController::class, 'params'])->middleware('auth')->name('params');
+Route::post('/params', [AuthController::class, 'params_store'])->middleware('auth')->name('params_store');
+Route::get('/logout', [AuthController::class, 'logout'])->middleware('auth')->name('logout');
+Route::get('/help', [HelpController::class, 'help_center'])->name('help_center');
+Route::post('/help', [HelpController::class, 'help_center_post'])->name('help_center_post');
+Route::get('/admin/help', [HelpController::class, 'help_center_admin'])->middleware("auth")->name('help_center_admin');
 
 Route::get('/dashboard', [DashboardController::class, 'index'])->name('dashboard.index');
-
-
 
 Route::resource('annees', AnneeController::class);
 Route::resource('enseignants', EnseignantController::class);

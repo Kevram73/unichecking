@@ -2,9 +2,12 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Annee;
+use App\Models\Universite;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\UserMail;
+use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Str;
 use App\Models\User;
 use Illuminate\Support\Facades\Mail;
@@ -19,6 +22,28 @@ class AuthController extends Controller
     public function login_get(Request $request)
     {
         return view("auth.login");
+    }
+
+    public function profile(Request $request)
+    {
+        $user = Auth::user();
+        return view('users.profile', compact('user'));
+    }
+
+    public function params(Request $request)
+    {
+        $user = Auth::user();
+        $universites = Universite::all();
+        $years = Annee::all();
+        return view('users.params', compact('user', 'universites', 'years'));
+    }
+
+    public function params_store(Request $request)
+    {
+        Session::put('academic', $request->academic);
+        Session::put('university', $request->university);
+
+        return redirect()->back();
     }
 
     /**
@@ -99,5 +124,11 @@ class AuthController extends Controller
         $user->password = Hash::make($request->password);
         $user->save();
         return redirect()->route('login')->with('success', "Veuillez vous connecter.");
+    }
+
+    public function logout(Request $request)
+    {
+        Auth::logout();
+        return redirect()->route('login');
     }
 }

@@ -156,11 +156,7 @@
             </div>
         </div>
     </main>
-    <script>
-        let table = new DataTable('#myTable', {
-            responsive: true
-        });
-    </script>
+    
     <script>
         const dialog = document.querySelector("#add-modal");
         const showButton = document.querySelector("#show-add-modal");

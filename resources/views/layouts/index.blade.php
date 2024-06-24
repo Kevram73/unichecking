@@ -45,7 +45,7 @@
     <script>
         let table = new DataTable('#myTable', {
             language: {
-                url: '//cdn.datatables.net/plug-ins/2.0.8/i18n/fr-FR.json',
+                url: "{{ asset('assets/FR-fr.json') }}",
             },
         });
     </script>

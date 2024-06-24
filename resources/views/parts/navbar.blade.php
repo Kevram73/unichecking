@@ -3,6 +3,7 @@
         <i class="hamburger align-self-center"></i>
     </a>
 
+
     <div class="navbar-collapse collapse">
         <ul class="navbar-nav navbar-align">
             <li class="nav-item dropdown">
@@ -83,19 +84,18 @@
 
                 <a class="nav-link dropdown-toggle d-none d-sm-inline-block" href="#"
                     data-bs-toggle="dropdown">
-                    <img src="{{ asset('assets/img/avatars/avatar.jpg')}}" class="avatar img-fluid rounded me-1"
-                        alt="Charles Hall" /> <span class="text-dark">Kevin Ativon</span>
+                    <span class="text-dark">{{ auth()->user()->username }}</span>
                 </a>
                 <div class="dropdown-menu dropdown-menu-end">
-                    <a class="dropdown-item" href="pages-profile.html"><i class="align-middle me-1"
+                    <a class="dropdown-item" href="{{ route('auth.profile') }}"><i class="align-middle me-1"
                             data-feather="user"></i> Profil</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="index.html"><i class="align-middle me-1"
+                    <a class="dropdown-item" href="{{ route('params') }}"><i class="align-middle me-1"
                             data-feather="settings"></i> Paramétrage</a>
-                    <a class="dropdown-item" href="#"><i class="align-middle me-1"
+                    <a class="dropdown-item" href="{{ route('help_center') }}"><i class="align-middle me-1"
                             data-feather="help-circle"></i> Centre d'aide</a>
                     <div class="dropdown-divider"></div>
-                    <a class="dropdown-item" href="#">Se déconnecter</a>
+                    <a class="dropdown-item" href="{{ route('logout') }}">Se déconnecter</a>
                 </div>
             </li>
         </ul>

@@ -1,4 +1,3 @@
-
 @extends('layouts.index')
 
 @section('content')
@@ -17,54 +16,8 @@
         <div class="container-fluid p-0">
             <div class="row justify-space-between pb-4">
                 <div class="col">
-                    <h1 class="h3 mb-3">Programme d'indisponibilité</h1>
+                    <h1 class="h3 mb-3">Centre d'aide</h1>
                 </div>
-                <div class="col d-flex justify-content-end">
-                    <button type="button" class="btn btn-primary" id="show-add-modal">
-                        <i class="fa fa-plus"></i> Ajouter
-                    </button>
-
-                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
-                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                            <h4 class="h4" style="padding-top: 8px;">Ajouter une indisponibilité</h4>
-                            <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
-                        </div>
-
-                        <hr />
-                        <form action="{{ route('deplacements.store') }}" method="POST">
-                            @csrf
-                            <div class="mt-4">
-                                <label for="code">Code</label>
-                                <input type="text" class="form-control" name="code" placeholder="Code de la deplacement"
-                                       required>
-                            </div>
-                            <div class="mt-4">
-                                <label for="libelle">Libellé</label>
-                                <input type="text" class="form-control" name="libelle"
-                                       placeholder="Liblllé de la deplacement" required>
-                            </div>
-                            <div class="mt-4">
-                                <button class="btn btn-success" type="submit">Enregistrer</button>
-                            </div>
-                        </form>
-
-                    </dialog>
-                </div>
-
-            </div>
-            <div class="text-center">
-                <span class="badge">
-                    @if (Session::has('error'))
-                        @if (session('error') == true)
-                            <p>{{ session('msg') }}</p>
-                        @endif
-                    @endif
-                    @if (Session::has('error'))
-                        @if (session('error') == false)
-                            <p>{{ session('msg') }}</p>
-                        @endif
-                    @endif
-                </span>
             </div>
 
             <div class="row">
@@ -78,49 +31,45 @@
                                             <thead>
                                             <tr>
                                                 <th class="text-left">N°</th>
-                                                <th class="text-left">Désignation</th>
-                                                <th class="text-left">Enseignant</th>
-                                                <th class="text-left">Du</th>
-                                                <th class="text-left">Au</th>
+                                                <th class="text-left">Code</th>
+                                                <th class="text-left">Libellé</th>
                                                 <th class="text-left">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @if (count($deplacements) < 1)
+                                            @if (count($facultes) < 1)
                                                 <tr>
-                                                    <td colspan="8" class="text-center">Aucune deplacement enregistrée
+                                                    <td colspan="8" class="text-center">Aucune faculté enregistrée
                                                         pour le moment</td>
                                                 </tr>
                                             @endif
-                                            @foreach ($deplacements as $deplacement)
+                                            @foreach ($facultes as $faculte)
                                                 <tr>
-                                                    <td class="text-left">{{ $loop->index }}</td>
-                                                    <td class="text-left">{{ $deplacement->type()->designation }}</td>
-                                                    <td class="text-left">{{ $deplacement->enseignant() }}</td>
-                                                    <td class="text-left">{{ $deplacement->date_debut }}</td>
-                                                    <td class="text-left">{{ $deplacement->date_fin }}</td>
+                                                    <td class="text-left">{{ $loop->index + 1 }}</td>
+                                                    <td class="text-left">{{ $faculte->code }}</td>
+                                                    <td class="text-left">{{ $faculte->libelle }}</td>
                                                     <td class="text-left">
-                                                        <button type="button" class="btn btn-sm btn-primary" id="editButton-{{ $deplacement->id }}"><i class="fa fa-edit"></i></button>
-                                                        <button type="button" class="btn btn-sm btn-danger" id="deleteButton-{{ $deplacement->id }}"><i class="fa fa-trash"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-primary" id="editButton-{{ $faculte->id }}"><i class="fa fa-edit"></i></button>
+                                                        <button type="button" class="btn btn-sm btn-danger" id="deleteButton-{{ $faculte->id }}"><i class="fa fa-trash"></i></button>
                                                     </td>
 
                                                     <!-- Edit Faculty Dialog -->
-                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="edit-modal-{{ $deplacement->id }}">
+                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="edit-modal-{{ $faculte->id }}">
                                                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                                            <h4 class="h4" style="padding-top: 8px;">Editer une deplacement</h4>
+                                                            <h4 class="h4" style="padding-top: 8px;">Editer une faculté</h4>
                                                             <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close" ></i></button>
                                                         </div>
                                                         <hr/>
-                                                        <form action="{{ route('deplacements.update', $deplacement->id) }}" method="POST">
+                                                        <form action="{{ route('facultes.update', $faculte->id) }}" method="POST">
                                                             @csrf
                                                             @method('PUT')
                                                             <div class="mt-4">
                                                                 <label for="code">Code</label>
-                                                                <input type="text" class="form-control" name="code" placeholder="Code de la deplacement" value="{{ $deplacement->code }}" required>
+                                                                <input type="text" class="form-control" name="code" placeholder="Code de la faculté" value="{{ $faculte->code }}" required>
                                                             </div>
                                                             <div class="mt-4">
                                                                 <label for="libelle">Libellé</label>
-                                                                <input type="text" class="form-control" name="libelle" placeholder="Libellé de la deplacement" value="{{ $deplacement->libelle }}" required>
+                                                                <input type="text" class="form-control" name="libelle" placeholder="Libellé de la faculté" value="{{ $faculte->libelle }}" required>
                                                             </div>
                                                             <div class="mt-4">
                                                                 <button class="btn btn-success" type="submit">Modifier</button>
@@ -129,17 +78,17 @@
                                                     </dialog>
 
                                                     <!-- Delete Faculty Dialog -->
-                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="delete-modal-{{ $deplacement->id }}">
+                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="delete-modal-{{ $faculte->id }}">
                                                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                                            <h4 class="h4" style="padding-top: 8px;">Supprimer une deplacement</h4>
+                                                            <h4 class="h4" style="padding-top: 8px;">Supprimer une faculté</h4>
                                                             <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close" ></i></button>
                                                         </div>
                                                         <hr/>
-                                                        <form action="{{ route('deplacements.destroy', $deplacement->id) }}" method="POST">
+                                                        <form action="{{ route('facultes.destroy', $faculte->id) }}" method="POST">
                                                             @csrf
                                                             @method('DELETE')
                                                             <div class="mt-4 text-center">
-                                                                <h5>Voulez-vous vraiment supprimer la deplacement de désignation : {{ $deplacement->type()->designation }}</h5>
+                                                                <h5>Voulez-vous vraiment supprimer la faculté de code : {{ $faculte->code }}</h5>
                                                             </div>
                                                             <div class="mt-4" style="display: flex; flex-direction: inverse-row; align-items: right;">
                                                                 <button class="btn btn-danger" type="submit">Supprimer</button>
@@ -161,6 +110,11 @@
             </div>
         </div>
     </main>
+    <script>
+        let table = new DataTable('#myTable', {
+            responsive: true
+        });
+    </script>
     <script>
         const dialog = document.querySelector("#add-modal");
         const showButton = document.querySelector("#show-add-modal");
@@ -199,4 +153,3 @@
         });
     </script>
 @endsection
-
