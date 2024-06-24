@@ -79,13 +79,70 @@
                         <div class="row">
                             <div class="col-md-6">
                                 <div class="card-body">
-                                    <label for="poste">Spécialité</label>
-                                    <select name="specialite[]" id="specialite" class="form-control" multiple required>
+                                    {{-- <select name="specialite[]" id="specialite" class="form-control" multiple required>
                                         <option>Choisissez la spécialité</option>
                                         @foreach($specialites as $spec)
                                             <option value="{{ $spec->id }}">{{ $spec->code }} - {{ $spec->intitule }}</option>
                                         @endforeach
-                                    </select>
+                                    </select> --}}
+
+                                    <table class="table mb-0">
+                                        <thead>
+                                            <tr>
+                                                <td>Num.</td>
+                                                <td>Désignation</td>
+                                                <td>
+                                                <a href=""><div class="col d-flex justify-content-end">
+                                                    <button type="button" class="btn btn-primary" id="show-add-modal">
+                                                        <i class="fa fa-plus"></i>
+                                                    </button>
+
+                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
+                                                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                                            <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
+                                                            <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
+                                                        </div>
+
+                                                        <hr />
+                                                        <form method="POST">
+                                                            @csrf
+                                                            <div class="mt-4">
+                                                                <div class="row">
+                                                                    <div class="col col-md-12">
+                                                                        <label for="nom">Nom</label>
+                                                                        <input type="text" class="form-control" name="nom" placeholder="Nom" required>
+                                                                    </div>
+                                                                </div>
+                                                            </div>
+                                                            <div class="mt-4">
+                                                                <button class="btn btn-success" type="submit">Enregistrer</button>
+                                                            </div>
+                                                        </form>
+
+                                                    </dialog>
+                                                </div>
+                                            </a>
+                                        </td>
+                                            </tr>
+                                        </thead>
+                                        <tbody>
+                                            <tr>
+                                                <td>M056</td>
+                                                <td>Médicine Générale</td>
+                                                <td><a href="" class="fa fa-trash" style="color: red;"></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>M056</td>
+                                                <td>Médicine Générale</td>
+                                                <td><a href="" class="fa fa-trash" style="color: red;"></a></td>
+                                            </tr>
+                                            <tr>
+                                                <td>M056</td>
+                                                <td>Médicine Générale</td>
+                                                <td><a href="" class="fa fa-trash" style="color: red;"></a></td>
+                                            </tr>
+                                        </tbody>
+                                    </table>
                                 </div>
                             </div>
                             <div class="col-md-6">
@@ -126,6 +183,21 @@
         </div>
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+    <script>
+        const dialog = document.querySelector("#add-modal");
+        const showButton = document.querySelector("#show-add-modal");
+        const closeButton = document.querySelector("#close-add-modal");
+
+        // "Show the dialog" button opens the dialog modally
+        showButton.addEventListener("click", () => {
+            dialog.showModal();
+        });
+
+        // "Close" button closes the dialog
+        closeButton.addEventListener("click", () => {
+            dialog.close();
+        });
+    </script>
     <script>
         window.addEventListener('beforeunload', function () {
             sessionStorage.clear(); // Vide la session storage
@@ -174,10 +246,10 @@
                                         <hr/>
                                         <form method="POST">
                                             @csrf
-                    @method('PUT')
-                    <div class="mt-4">
-                        <label for="code">Code</label>
-                        <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>
+                                            @method('PUT')
+                                            <div class="mt-4">
+                                                <label for="code">Code</label>
+                                                <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>
                                             </div>
                                             <div class="mt-4">
                                                 <label for="code">Intitulé</label>

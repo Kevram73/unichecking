@@ -55,10 +55,14 @@ class AuthController extends Controller
             'email' => 'required|email',
             'password' => 'required',
         ]);
-
+        $annee = Annee::where("open", 1)->get()->first();
+        $universite = Universite::all()->first();
         $credentials = $request->only('email', 'password');
 
         if (Auth::attempt($credentials)) {
+            Session::put('on_year', $annee->libelle );
+            Session::put('uni_name', $universite->nom );
+            Session::put('uni_id', $universite->id );
             return redirect()->route('dashboard.index');
         }
 

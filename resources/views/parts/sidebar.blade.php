@@ -2,10 +2,10 @@
     <div class="sidebar-content js-simplebar">
         <a class="sidebar-brand text-center">
             <h2 class="align-middle text-white" style="font-weight: 700; font-size: 26px">UNI-CHECK </h2>
-            <p style="font-size: 12px; color: grey;">2024-2025</p>
+            <p style="font-size: 12px; color: grey;">{{ session()->get('on_year'); }}</p>
         </a>
 
-        <h4 class="text-center" style="color: darkgrey; font-size: 14px; margin-top: -15px; margin-bottom: 10px;">Université de Lomé</h4>
+        <h4 class="text-center" style="color: darkgrey; font-size: 14px; margin-top: -15px; margin-bottom: 10px;">{{ session()->get('uni_name'); }}</h4>
 
         <ul class="sidebar-nav">
             <li class="sidebar-header">
