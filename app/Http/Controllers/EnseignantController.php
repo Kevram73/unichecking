@@ -49,6 +49,7 @@ class EnseignantController extends Controller
      */
     public function store(Request $request)
     {
+        dd($request);
         $enseignant = new Enseignant();
         $enseignant->nom = $request->nom;
         $enseignant->prenoms = $request->prenoms;

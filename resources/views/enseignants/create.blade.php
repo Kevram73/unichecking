@@ -21,134 +21,137 @@
             <div class="row">
                 <div class="col-12 col-md-12">
                     <div class="card">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="nom">Nom</label>
-                                    <input type="text" class="form-control" name="nom" required>
+                        <form action="{{ route('enseignants.store') }}" method="POST">
+                            @csrf
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="nom">Nom</label>
+                                        <input type="text" class="form-control" name="nom" required>
+                                    </div>
                                 </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="prenoms">Prénoms</label>
-                                    <input type="text" class="form-control" name="prenoms" required>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="email">Email</label>
-                                    <input type="email" class="form-control" name="email">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="fonction">Fonction</label>
-                                    <select name="fonction" id="fonction" class="form-control">
-                                        @foreach ($grades as $grade)
-                                            <option value="{{ $grade->id }}">{{ $grade->intitule }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="poste">Poste</label>
-                                    <select name="poste" id="poste" class="form-control">
-                                        @foreach ($postes as $poste)
-                                            <option value="{{ $poste->id }}">{{ $poste->libelle }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="detail_poste">Détails du poste</label>
-                                    <input type="text" class="form-control" name="detail_poste">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="type_piece">Type Pièce d'identité</label>
-                                    <select name="type_piece" id="" class="form-control">
-                                        @foreach ($type_pieces as $type_piece)
-                                            <option value="{{ $type_piece->id }}">{{ $type_piece->libelle }}</option>
-                                        @endforeach
-                                    </select>
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="piece_identite">Pièce d'identité</label>
-                                    <input type="file" class="file-input" accept=".jfif,.jpg,.jpeg,.png,.gif">
-                                    <div id="divImageMediaPreview">
-
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="prenoms">Prénoms</label>
+                                        <input type="text" class="form-control" name="prenoms" required>
                                     </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <table class="table mb-0">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-left">Spécialité</td>
-                                                <td class="text-center"><button class="btn btn-success" id="show-add-modal">Ajouter</button></td>
-                                                <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
-                                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                                        <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
-                                                        <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
-                                                    </div>
 
-                                                    <hr />
-                                                    <form  method="POST">
-                                                        @csrf
-                                                        <div class="mt-4">
-                                                            <label for="code">Spécialité</label>
-                                                            <select name="specialite" id="specialite" class="form-control">
-                                                                @foreach($specialites as $specialite)
-                                                                    <option value="{{ $specialite->id }}">{{ $specialite->code }} {{ $specialite->intitule }}</option>
-                                                                @endforeach
-                                                            </select>
-
-                                                        </div>
-                                                        
-                                                        <div class="mt-4">
-                                                            <button class="btn btn-success" type="submit">Enregistrer</button>
-                                                        </div>
-                                                    </form>
-
-                                                </dialog>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-center" colspan="4">
-                                                    Aucune spécialité sélectionnée
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="email">Email</label>
+                                        <input type="email" class="form-control" name="email">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="fonction">Fonction</label>
+                                        <select name="fonction" id="fonction" class="form-control">
+                                            @foreach ($grades as $grade)
+                                                <option value="{{ $grade->id }}">{{ $grade->intitule }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card-body">
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="poste">Poste</label>
+                                        <select name="poste" id="poste" class="form-control">
+                                            @foreach ($postes as $poste)
+                                                <option value="{{ $poste->id }}">{{ $poste->libelle }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="detail_poste">Détails du poste</label>
+                                        <input type="text" class="form-control" name="detail_poste">
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="type_piece">Type Pièce d'identité</label>
+                                        <select name="type_piece" id="" class="form-control">
+                                            @foreach ($type_pieces as $type_piece)
+                                                <option value="{{ $type_piece->id }}">{{ $type_piece->libelle }}</option>
+                                            @endforeach
+                                        </select>
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="piece_identite">Pièce d'identité</label>
+                                        <input type="file" class="file-input" accept=".jfif,.jpg,.jpeg,.png,.gif">
+                                        <div id="divImageMediaPreview">
+
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <table class="table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <td class="text-left">Spécialité</td>
+                                                    <td class="text-center"><button class="btn btn-success" id="show-add-modal">Ajouter</button></td>
+                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
+                                                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                                            <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
+                                                            <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
+                                                        </div>
+
+                                                        <hr />
+                                                        <form  method="POST" >
+                                                            @csrf
+                                                            <div class="mt-4">
+                                                                <label for="code">Spécialité</label>
+                                                                <select name="specialite" id="specialite" class="form-control">
+                                                                    @foreach($specialites as $specialite)
+                                                                        <option value="{{ $specialite->id }}">{{ $specialite->code }} {{ $specialite->intitule }}</option>
+                                                                    @endforeach
+                                                                </select>
+
+                                                            </div>
+
+                                                            <div class="mt-4">
+                                                                <button class="btn btn-success" id="spec-form">Enregistrer</button>
+                                                            </div>
+                                                        </form>
+
+                                                    </dialog>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center" colspan="4">
+                                                        Aucune spécialité sélectionnée
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-body">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </div>
+
                                 </div>
 
                             </div>
-
-                        </div>
+                        </form>
                     </div>
                 </div>
             </div>
@@ -170,8 +173,8 @@
             showAddModal.onclick = () => addModal.showModal(); // Affiche le modal
             closeAddModal.onclick = () => addModal.close(); // Ferme le modal
 
-            const form = document.querySelector('form');
-            form.onsubmit = function (event) {
+            const form = document.getElementById('spec-form');
+            form.onclick = function (event) {
                 event.preventDefault(); // Empêche la soumission réelle du formulaire
                 const specialiteId = document.getElementById('specialite').value;
                 const specialite = document.getElementById('specialite').selectedOptions[0].textContent;
@@ -201,9 +204,7 @@
                 const index = button.getAttribute('data-index');
                 let dataList = JSON.parse(sessionStorage.getItem('formDataList'));
                 dataList.splice(index, 1); // Supprime l'entrée
-                sessionStorage.setItem('formDataList', JS
-                
-                ON.stringify(dataList));
+                sessionStorage.setItem('formDataList', JSON.stringify(dataList));
                 updateTable(); // Met à jour le tableau
             };
 
@@ -265,9 +266,9 @@
 
         if (typeof (FileReader) != "undefined") {
         var dvPreview = $("#divImageMediaPreview");
-        dvPreview.html("");            
+        dvPreview.html("");
         $($(this)[0].files).each(function () {
-        var file = $(this);                
+        var file = $(this);
             var reader = new FileReader();
             reader.onload = function (e) {
                 var img = $("<img />");
@@ -275,7 +276,7 @@
                 img.attr("src", e.target.result);
                 dvPreview.append(img);
             }
-            reader.readAsDataURL(file[0]);                
+            reader.readAsDataURL(file[0]);
         });
         } else {
         alert("This browser does not support HTML5 FileReader.");
