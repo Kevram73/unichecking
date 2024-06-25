@@ -8,6 +8,9 @@ use Exception;
 
 class TypePieceIdentiteController extends Controller
 {
+    public function __construct(){
+        $this->middleware("auth");
+    }
     /**
      * Display a listing of identity document types.
      */

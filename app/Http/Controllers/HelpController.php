@@ -6,6 +6,11 @@ use Illuminate\Http\Request;
 
 class HelpController extends Controller
 {
+
+    public function __construct(){
+        $this->middleware("auth");
+    }
+
     public function help_center(Request $request)
     {
         return view('helps.index');
