@@ -11,29 +11,31 @@ class EnseignantSpecialite extends Model
 {
     use HasFactory;
 	protected $table = 'EnseignantSpecialite';
-	
+
 	protected $fillable = ['enseignant_id', 'specialite_id', 'annee_id'];
-	
+
     /**
-     * 
+     *
      */
     public function annee(): BelongsTo
     {
         return $this->belongsTo(Annee::class);
-    }			
+    }
     /**
-     * 
+     *
      */
     public function specialite(): BelongsTo
     {
         return $this->belongsTo(Specialite::class);
-    }		
+    }
     /**
-     * 
+     *
      */
     public function enseignant(): BelongsTo
     {
         return $this->belongsTo(Enseignant::class)
 					->withDefault(new Enseignant());
     }
+
+    
 }

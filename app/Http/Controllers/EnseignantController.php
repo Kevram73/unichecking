@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Faculte;
 use App\Models\Specialite;
+use App\Models\Annee;
 use App\Models\TypePieceIdentite;
 use Illuminate\Http\Request;
 
@@ -12,6 +13,9 @@ use App\Models\Grade;
 use App\Models\Poste;
 use App\Models\User;
 use App\Models\EnseignantGrade;
+use App\Models\EnseignantSpecialite;
+use App\Models\EnseignantUE;
+use App\Models\UE;
 use Exception;
 
 class EnseignantController extends Controller
@@ -49,28 +53,68 @@ class EnseignantController extends Controller
      */
     public function store(Request $request)
     {
-        dd($request);
         $enseignant = new Enseignant();
         $enseignant->nom = $request->nom;
         $enseignant->prenoms = $request->prenoms;
         $enseignant->email = $request->email;
-        $enseignant->grade_id = $request->grade;
+        $enseignant->grade_id = $request->fonction;
         $enseignant->poste_id = $request->poste;
         $enseignant->type_piece_id = $request->type_piece;
-        $enseignant->detail_poste = $request->details_poste;
+        $enseignant->detail_poste = $request->detail_poste;
         $enseignant->save();
 
         $enseignant_grade = new EnseignantGrade();
-        $enseignant_grade->grade_id = $request->grade_id;
+        $enseignant_grade->grade_id = $request->fonction;
         $enseignant_grade->enseignant_id = $enseignant->id;
-        $enseignant_grade->poste_id = $request->poste_id;
-        $enseignant_grade->annee_id = 6;
+        $enseignant_grade->poste_id = $request->poste;
+        $enseignant_grade->annee_id = Annee::where("open", 1)->get()->first()->id;
         $enseignant_grade->vol_hor_tot = 0;
         $enseignant_grade->save();
+        $specs = json_decode($request->specialite, true);
 
+        foreach($specs as $spec){
+            $enseignant_specialite = new EnseignantSpecialite();
+            $enseignant_specialite->enseignant_id = $enseignant->id;
+            $enseignant_specialite->specialite_id = $spec['specialiteId'];
+            $enseignant_specialite->annee_id = Annee::where("open", 1)->get()->first()->id;
+            $enseignant_specialite->save();
+        }
 
+        return redirect()->route('enseignants.ues', $enseignant->id);
+    }
 
-        return redirect()->route('enseignants.index');
+    public function ues_enseignant(int $id){
+
+        $ues_liste = EnseignantUE::where('enseignant_id', $id)->get();
+        $enseignant = Enseignant::find($id);
+        $ueIds = EnseignantUE::where('enseignant_id', $id)->pluck('id');
+        $ues = UE::whereNotIn('id', $ueIds)->get();
+        return view('enseignants.ues', compact('ues_liste', 'ues', 'id', 'enseignant'));
+    }
+
+    public function ue_update(Request $request, int $id){
+        $ue = EnseignantUE::find($id);
+        $ue->ue_id = $request->ue;
+        $ue->save();
+        return redirect()->back()->with("msg", "Modifié avec succès");
+    }
+
+    public function ue_delete(int $id){
+        $ue = EnseignantUE::find($id);
+        $ue->delete();
+        return redirect()->back()->with("msg", "Supprimé avec succès");
+    }
+
+    public function store_ue_ens(Request $request){
+        $enseignant_ue = new EnseignantUE();
+        $enseignant_ue->enseignant_id = $request->ens_id;
+        $enseignant_ue->ue_id = $request->ue;
+        $enseignant_ue->annee_id = Annee::where("open", 1)->get()->first()->id;
+        $enseignant_ue->date_affectation = now();
+        $enseignant_ue->nb_hr_cpt = 0;
+        $enseignant_ue->save();
+
+        return redirect()->route('enseignants.ues', $request->ens_id);
     }
 
     /**
@@ -121,7 +165,7 @@ class EnseignantController extends Controller
             $msg = "Une erreur est survenue lors de la mise à jour des données de l'enseignant.";
         }
 
-        return view('enseignants.edit', compact('msg'));
+        return view('enseignants.index', compact('msg'));
     }
 
     /**

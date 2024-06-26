@@ -60,12 +60,7 @@
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @if (count($seances) < 1)
-                                                <tr>
-                                                    <td colspan="7" class="text-center">Aucune spécialité enregistrée
-                                                        pour le moment</td>
-                                                </tr>
-                                            @endif
+
                                             @foreach ($seances as $seance)
                                                 <tr>
                                                     <td class="text-left">{{ $loop->index + 1 }}</td>

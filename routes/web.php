@@ -60,6 +60,10 @@ Route::resource('universites', UniversiteController::class);
 Route::get('/enseignant/choose', [SeanceController::class, 'choose_enseignant'])->name('seance.choose');
 Route::get('/enseignant/choose/{id}', [SeanceController::class, 'choice'])->name('seance.choice');
 Route::get('/filieres/get/{id}', [SeanceController::class, 'getFilieres'])->name('seance.filiere');
+Route::get('/enseignant/ues/{id}', [EnseignantController::class, 'ues_enseignant'])->name('enseignants.ues');
+Route::post('/enseignant/ues', [EnseignantController::class, 'store_ue_ens'])->name('enseignants.ues.store');
+Route::delete('/enseignant/delete/{id}', [EnseignantController::class, 'ue_delete'])->name('enseignants.ues.ue_delete');
+Route::put('/enseignant/update/{id}', [EnseignantController::class, 'ue_update'])->name('enseignants.ues.ue_update');
 
 // Route::prefix('annees')->group(function () {
 //     Route::get('/', [AnneeController::class, 'index']);

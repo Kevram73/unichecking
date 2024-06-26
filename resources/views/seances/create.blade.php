@@ -18,143 +18,152 @@
                 <h1 class="h3 d-inline align-middle">Enregistrement d'une séance</h1>
 
             </div>
-            <div class="row">
-                <div class="col-12 col-md-12">
-                    <div class="card">
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="nom">Nom et prénoms</label>
-                                    <input type="text" class="form-control" value="{{ $enseignant->nom }} {{ $enseignant->prenoms }}" name="nom" readonly>
+            <form action="{{ route('seances.store') }}" method="POST">
+                @csrf
+                <div class="row">
+                    <div class="col-12 col-md-12">
+                        <div class="card">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="nom">Nom et prénoms</label>
+                                        <input type="text" class="form-control" value="{{ $enseignant->nom }} {{ $enseignant->prenoms }}" name="nom" readonly>
+                                        <input type="hidden" name="ens_id" value="{{ $enseignant->id }}" >
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="ue">Unité d'enseignement</label>
+                                        <select name="ue" id="ue" class="form-control">
+                                            @foreach ($ues as $ue)
+                                            <option value="{{ $ue->ue()->id }}">{{ $ue->ue()->intitule }}</option>
+                                            @endforeach
+
+                                        </select>
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="prenoms">Unité d'enseignement</label>
-                                    <select name="ue" id="ue" class="form-control">
-                                        <option value="MTH-300">Statistiques et probabilités</option>
-                                    </select>
+                            <div class="row" style="margin-top: -10px;">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="nom">Jour de semaine</label>
+                                        <select name="jour_semaine" id="jour_semaine" class="form-control">
+                                            <option>Sélectionnez un jour de la semaine</option>
+                                            <option value="1">Lundi</option>
+                                            <option value="2">Mardi</option>
+                                            <option value="3">Mercredi</option>
+                                            <option value="4">Jeudi</option>
+                                            <option value="5">Vendredi</option>
+                                            <option value="6">Samedi</option>
+                                            <option value="7">Dimanche</option>
+                                        </select>
+                                    </div>
                                 </div>
+
                             </div>
-                        </div>
-                        <div class="row" style="margin-top: -10px;">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="nom">Jour de semaine</label>
-                                    <select name="jour_semaine" id="jour_semaine" class="form-control">
-                                        <option>Sélectionnez un jour de la semaine</option>
-                                        <option value="1">Lundi</option>
-                                        <option value="2">Mardi</option>
-                                        <option value="3">Mercredi</option>
-                                        <option value="4">Jeudi</option>
-                                        <option value="5">Vendredi</option>
-                                        <option value="6">Samedi</option>
-                                        <option value="7">Dimanche</option>
-                                    </select>
+
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="heure_debut">Heure de début</label>
+                                        <input type="time" class="form-control" name="heure_debut">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="heure_fin">Heure de fin</label>
+                                        <input type="time" class="form-control" name="heure_fin">
+                                    </div>
                                 </div>
                             </div>
 
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="heure_debut">Heure de début</label>
-                                    <input type="time" class="form-control" name="heure_debut">
+                            <div class="row">
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="date_debut">Date de début</label>
+                                        <input type="date" class="form-control" name="heure_debut">
+                                    </div>
+                                </div>
+                                <div class="col-md-6">
+                                    <div class="card-body">
+                                        <label for="date_fin">Date de fin</label>
+                                        <input type="date" class="form-control" name="heure_fin">
+                                    </div>
                                 </div>
                             </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="heure_fin">Heure de fin</label>
-                                    <input type="time" class="form-control" name="heure_fin">
-                                </div>
-                            </div>
-                        </div>
-
-                        <div class="row">
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="date_debut">Date de début</label>
-                                    <input type="date" class="form-control" name="heure_debut">
-                                </div>
-                            </div>
-                            <div class="col-md-6">
-                                <div class="card-body">
-                                    <label for="date_fin">Date de fin</label>
-                                    <input type="date" class="form-control" name="heure_fin">
-                                </div>
-                            </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card-body">
-                                    <table class="table mb-0">
-                                        <thead>
-                                            <tr>
-                                                <td class="text-left">Faculté</td>
-                                                <td class="text-center">Filière</td>
-                                                <td class="text-center">Semestre</td>
-                                                <td class="text-center"><button class="btn btn-success" id="show-add-modal">Ajouter</button></td>
-                                                <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
-                                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                                        <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
-                                                        <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
-                                                    </div>
-
-                                                    <hr />
-                                                    <form action="{{ route('filieres.store') }}" method="POST">
-                                                        @csrf
-                                                        <div class="mt-4">
-                                                            <label for="code">Faculté</label>
-                                                            <select name="faculte" id="faculte" class="form-control">
-                                                                @foreach($facultes as $faculte)
-                                                                    <option value="{{ $faculte->id }}">{{ $faculte->libelle  }}</option>
-                                                                @endforeach
-                                                            </select>
-
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-body">
+                                        <table class="table mb-0">
+                                            <thead>
+                                                <tr>
+                                                    <td class="text-left">Faculté</td>
+                                                    <td class="text-center">Filière</td>
+                                                    <td class="text-center">Semestre</td>
+                                                    <td class="text-center"><button class="btn btn-success" id="show-add-modal" type="button">Ajouter</button></td>
+                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
+                                                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                                            <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
+                                                            <button class="btn btn-danger" id="close-add-modal" type="button"><i class="fa fa-close"></i></button>
                                                         </div>
-                                                        <div class="mt-4">
-                                                            <label for="code">Filière</label>
-                                                            <select name="filiere" id="filiere" class="form-control">
 
-                                                            </select>
-                                                        </div>
-                                                        <div class="mt-4">
-                                                            <label for="code">Semestre</label>
-                                                            <input type="number" class="form-control" name="semester" placeholder="Semestre" min="1" max="10"
-                                                                   required>
-                                                        </div>
-                                                        <div class="mt-4">
-                                                            <button class="btn btn-success" type="submit">Enregistrer</button>
-                                                        </div>
-                                                    </form>
+                                                        <hr />
+                                                        <form action="{{ route('filieres.store') }}" method="POST">
+                                                            @csrf
+                                                            <div class="mt-4">
+                                                                <label for="code">Faculté</label>
+                                                                <select name="faculte" id="faculte" class="form-control">
+                                                                    @foreach($facultes as $faculte)
+                                                                        <option value="{{ $faculte->id }}">{{ $faculte->libelle  }}</option>
+                                                                    @endforeach
+                                                                </select>
 
-                                                </dialog>
-                                            </tr>
-                                        </thead>
-                                        <tbody>
-                                            <tr>
-                                                <td class="text-center" colspan="4">
-                                                    Aucune filière sélectionnée
-                                                </td>
-                                            </tr>
-                                        </tbody>
-                                    </table>
+                                                            </div>
+                                                            <div class="mt-4">
+                                                                <label for="code">Filière</label>
+                                                                <select name="filiere" id="filiere" class="form-control">
+
+                                                                </select>
+                                                            </div>
+                                                            <div class="mt-4">
+                                                                <label for="code">Semestre</label>
+                                                                <input type="number" class="form-control" name="semester" placeholder="Semestre" min="1" max="10"
+                                                                       required>
+                                                            </div>
+                                                            <div class="mt-4">
+                                                                <button class="btn btn-success" type="submit" id="add_btn">Enregistrer</button>
+                                                            </div>
+                                                        </form>
+
+                                                    </dialog>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td class="text-center" colspan="4">
+                                                        Aucune filière sélectionnée
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
                                 </div>
                             </div>
-                        </div>
-                        <div class="row">
-                            <div class="col-md-12">
-                                <div class="card-body">
-                                    <button type="submit" class="btn btn-primary">Enregistrer</button>
+                            <input type="hidden" name="ens_sem" id="ens_sem"/>
+                            <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-body">
+                                        <button type="submit" class="btn btn-primary">Enregistrer</button>
+                                    </div>
+
                                 </div>
 
                             </div>
-
                         </div>
                     </div>
                 </div>
-            </div>
+            </form>
+
 
         </div>
     </main>
@@ -182,14 +191,15 @@
                 const filiere = document.getElementById('filiere').selectedOptions[0].textContent;
                 const semester = document.querySelector('[name="semester"]').value;
                 const newData = { faculteId, filiereId, faculte, filiere, semester };
-                let dataList = JSON.parse(sessionStorage.getItem('formDataList')) || [];
+                let dataList = JSON.parse(sessionStorage.getItem('ensDataList')) || [];
                 dataList.push(newData);
-                sessionStorage.setItem('formDataList', JSON.stringify(dataList));
+                sessionStorage.setItem('ensDataList', JSON.stringify(dataList));
+                document.getElementById("ens_sem").value = JSON.stringify(dataList);
                 updateTable();
             };
 
             function updateTable() {
-                const dataList = JSON.parse(sessionStorage.getItem('formDataList')) || [];
+                const dataList = JSON.parse(sessionStorage.getItem('ensDataList')) || [];
                 const tbody = document.querySelector('table tbody');
                 tbody.innerHTML = '';
                 dataList.forEach((data, index) => {
@@ -230,9 +240,10 @@
 
             window.deleteEntry = function(button) {
                 const index = button.getAttribute('data-index');
-                let dataList = JSON.parse(sessionStorage.getItem('formDataList'));
+                let dataList = JSON.parse(sessionStorage.getItem('ensDataList'));
                 dataList.splice(index, 1); // Supprime l'entrée
-                sessionStorage.setItem('formDataList', JSON.stringify(dataList));
+                sessionStorage.setItem('ensDataList', JSON.stringify(dataList));
+                document.getElementById("ens_sem").value = JSON.stringify(dataList);
                 updateTable(); // Met à jour le tableau
             };
 

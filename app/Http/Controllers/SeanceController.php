@@ -39,7 +39,8 @@ class SeanceController extends Controller
     public function choice(Request $request, $id){
         $enseignant = Enseignant::find($id);
         $facultes = Faculte::all();
-        return view('seances.create', compact('enseignant', 'facultes'));
+        $ues = EnseignantUE::where('enseignant_id', $id)->get();
+        return view('seances.create', compact('enseignant', 'facultes', 'ues'));
     }
 
     public function getFilieres($id)

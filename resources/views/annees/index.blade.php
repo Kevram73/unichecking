@@ -92,7 +92,7 @@
                                                 </tr>
                                             @endif
                                             @foreach ($annees as $annee)
-                                                <tr>
+                                                <tr>   
                                                     <td class="text-left">{{ $loop->index + 1 }}</td>
                                                     <td class="text-left">{{ $annee->libelle }}</td>
 

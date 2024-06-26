@@ -89,7 +89,7 @@
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="piece_identite">Pièce d'identité</label>
-                                        <input type="file" class="file-input" accept=".jfif,.jpg,.jpeg,.png,.gif">
+                                        <input type="file" class="file-input" name="piece" accept=".jfif,.jpg,.jpeg,.png,.gif">
                                         <div id="divImageMediaPreview">
 
                                         </div>
@@ -103,15 +103,15 @@
                                             <thead>
                                                 <tr>
                                                     <td class="text-left">Spécialité</td>
-                                                    <td class="text-center"><button class="btn btn-success" id="show-add-modal">Ajouter</button></td>
+                                                    <td class="text-center"><a class="btn btn-success" id="show-add-modal">Ajouter</a></td>
                                                     <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
                                                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
                                                             <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
-                                                            <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
+                                                            <a class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></a>
                                                         </div>
 
                                                         <hr />
-                                                        <form  method="POST" >
+                                                        <form>
                                                             @csrf
                                                             <div class="mt-4">
                                                                 <label for="code">Spécialité</label>
@@ -123,8 +123,10 @@
 
                                                             </div>
 
+                                                            <input type="hidden" name="specialite" id="spec_liste">
+
                                                             <div class="mt-4">
-                                                                <button class="btn btn-success" id="spec-form">Enregistrer</button>
+                                                                <a class="btn btn-success" id="spec-form">Enregistrer</a>
                                                             </div>
                                                         </form>
 
@@ -165,6 +167,9 @@
         });
     </script>
     <script>
+
+      </script>
+    <script>
         document.addEventListener('DOMContentLoaded', function () {
             const addModal = document.getElementById('add-modal');
             const showAddModal = document.getElementById('show-add-modal');
@@ -182,6 +187,7 @@
                 let dataList = JSON.parse(sessionStorage.getItem('formDataList')) || [];
                 dataList.push(newData);
                 sessionStorage.setItem('formDataList', JSON.stringify(dataList));
+                document.getElementById('spec_liste').value = sessionStorage.getItem('formDataList');
                 updateTable();
             };
 
@@ -205,6 +211,7 @@
                 let dataList = JSON.parse(sessionStorage.getItem('formDataList'));
                 dataList.splice(index, 1); // Supprime l'entrée
                 sessionStorage.setItem('formDataList', JSON.stringify(dataList));
+                document.getElementById('spec_liste').value = sessionStorage.getItem('formDataList');
                 updateTable(); // Met à jour le tableau
             };
 

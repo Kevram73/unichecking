@@ -44,6 +44,10 @@
     <script src="https://cdn.datatables.net/2.0.8/js/dataTables.min.js"></script>
     <script>
         let table = new DataTable('#myTable', {
+            columnDefs: [{
+                    "defaultContent": "-",
+                    "targets": "_all"
+                  }],
             language: {
                 url: "{{ asset('assets/FR-fr.json') }}",
             },
