@@ -38,4 +38,40 @@ class ZKPalmApiHelper {
       print("Failed to close device: '${e.message}'.");
     }
   }
+
+  static Future<void> enroll() async {
+    try {
+      final result = await _channel.invokeMethod('enroll');
+      print(result);
+    } on PlatformException catch (e) {
+      print("Failed to enroll: '${e.message}'.");
+    }
+  }
+
+  static Future<void> verify() async {
+    try {
+      final result = await _channel.invokeMethod('onverify');
+      print(result);
+    } on PlatformException catch (e) {
+      print("Failed to verify: '${e.message}'.");
+    }
+  }
+
+  static Future<void> clear() async {
+    try {
+      final result = await _channel.invokeMethod('onclear');
+      print(result);
+    } on PlatformException catch (e) {
+      print("Failed to clear data: '${e.message}'.");
+    }
+  }
+
+  static Future<void> delete() async {
+    try {
+      final result = await _channel.invokeMethod('ondelete');
+      print(result);
+    } on PlatformException catch (e) {
+      print("Failed to delete: '${e.message}'.");
+    }
+  }
 }

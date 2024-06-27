@@ -1,7 +1,10 @@
 package com.example.zktecopalm;
 
 import android.Manifest;
+import android.annotation.SuppressLint;
+import android.app.AlertDialog;
 import android.content.Context;
+import android.content.DialogInterface;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
@@ -45,6 +48,7 @@ public class MainActivity extends FlutterActivity {
     private ZKPalmUSBManager zkPalmUSBManager = null;
     private final static int ENROLL_CNT = 5;
     private final static int IDENTIFY_THRESOLD = 576;
+    private boolean bstart = false;
 
     private int[] palmRect = new int[8];
     private String result = "";
@@ -52,6 +56,8 @@ public class MainActivity extends FlutterActivity {
     private SurfaceView surfaceView = null;
     private EditText editText = null;
     private String regId = "";
+
+    private DBManager dbManager = new DBManager();
 
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
@@ -78,14 +84,22 @@ public class MainActivity extends FlutterActivity {
                                     result.success("Close device ...");
                                     break;
                                 case "enroll":
-                                    regId = call.argument("regId"); // Get the regId from the arguments
-                                    onEnroll();
-                                    result.success("Start enrollment ...");
+                                    OnBnEnroll();
+                                    result.success("Enroll ...");
                                     break;
-                                case "match":
-                                    match();
-                                    result.success("Start matching ...");
+                                case "onverify":
+                                    OnBnVerify();
+                                    result.success("Verify ...");
                                     break;
+                                case "onclear":
+                                    OnBnClear();
+                                    result.success("Clear ...");
+                                    break;
+                                case "ondelete":
+                                    OnBnDel();
+                                    result.success("Delete ...");
+                                    break;
+
                                 default:
                                     result.notImplemented();
                                     break;
@@ -146,12 +160,6 @@ public class MainActivity extends FlutterActivity {
         zkPalmUSBManager.initUSBPermission();
     }
 
-    private void closeDevice()
-    {
-        LogHelper.d("close device");
-        zkPalmApi.stopCapture();
-        zkPalmApi.unInitialize();
-    }
 
     private void afterGetUsbPermission()
     {
@@ -216,11 +224,10 @@ public class MainActivity extends FlutterActivity {
                     {
                         setResult("the palm already enroll by " + idRet[0] + ",cancel enroll");
                         zkPalmApi.cancelEnroll();
-                        return;
                     }
                     else
                     {
-                        setResult("We need to capture " + (ENROLL_CNT - times) + " times the palm template");
+                        setResult("We need to capture " + (ENROLL_CNT - times) + "times the plam template");
                     }
                 }
                 else if (1 == actionResult)
@@ -229,6 +236,7 @@ public class MainActivity extends FlutterActivity {
                     if (0 == retVal)
                     {
                         String strFeature = Base64.encodeToString(regTemplate, Base64.NO_WRAP);
+                        dbManager.insertUser(regId, strFeature);
                         setResult("enroll succ， retVal=" + retVal);
                     }
                     else
@@ -241,6 +249,7 @@ public class MainActivity extends FlutterActivity {
                     setResult("enroll failed, ret=" + actionResult);
                 }
             }
+
 
             @Override
             public void onFeatureInfo(int actionResult, int imageQuality, int templateQuality, int[] rect) {
@@ -260,10 +269,39 @@ public class MainActivity extends FlutterActivity {
         setResult("start capture succ");
     }
 
-    public void OnBnEnroll(View view) {
+    public void OnBnBegin(View view) {
+        if (bstart) return;
+        tryGetUSBPermission();
+    }
+
+    private void closeDevice()
+    {
+        LogHelper.d("close device");
+        if (bstart) {
+            zkPalmApi.stopCapture();
+            bstart = false;
+            zkPalmApi.unInitialize();
+        }
+    }
+
+    public void OnBnStop()
+    {
+        if (bstart)
+        {
+            closeDevice();
+            textView.setText("stop capture succ");
+        }
+        else
+        {
+            textView.setText("already stop");
+        }
+    }
+
+    @SuppressLint("SetTextI18n")
+    public void OnBnEnroll() {
         if (bstart) {
             regId = editText.getText().toString();
-            if (null == regId || regId.isEmpty())
+            if (regId.isEmpty())
             {
                 textView.setText("please input your plamid");
                 return;
@@ -282,11 +320,81 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
-    public void OnBnVerify(View view) {
+    @SuppressLint("SetTextI18n")
+    public void OnBnVerify() {
         if (bstart) {
             zkPalmApi.cancelEnroll();
         }else {
             textView.setText("please begin capture first");
+        }
+    }
+
+    public void OnBnDel()
+    {
+        if (bstart) {
+            regId = editText.getText().toString();
+            if (null == regId || regId.isEmpty())
+            {
+                textView.setText("please input your plamid");
+                return;
+            }
+            if (!dbManager.isPalmExited(regId))
+            {
+                textView.setText("the plam no registered");
+                return;
+            }
+            new  AlertDialog.Builder(this)
+                    .setTitle("do you want to delete the plam?" )
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dbManager.deleteUser(regId))
+                            {
+                                zkPalmApi.dbDel(regId);
+                                setResult("delete success！");
+                            }
+                            else {
+                                setResult("Open db fail！");
+                            }
+                        }
+                    })
+                    .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
+        }
+    }
+
+    public void OnBnClear()
+    {
+        if (bstart) {
+            new  AlertDialog.Builder(this)
+                    .setTitle("do you want to delete all the plam?" )
+                    .setIcon(android.R.drawable.ic_dialog_info)
+                    .setPositiveButton("yes", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+                            if (dbManager.clear())
+                            {
+                                zkPalmApi.dbClear();
+                                setResult("Clear success！");
+                            }
+                            else {
+                                setResult("Open db fail！");
+                            }
+                        }
+                    })
+                    .setNegativeButton("no", new DialogInterface.OnClickListener() {
+                        @Override
+                        public void onClick(DialogInterface dialog, int which) {
+
+                        }
+                    })
+                    .show();
         }
     }
 
