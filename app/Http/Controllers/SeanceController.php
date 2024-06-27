@@ -5,10 +5,12 @@ namespace App\Http\Controllers;
 use App\Models\Faculte;
 use App\Models\Filiere;
 use App\Models\Seance;
+use App\Models\SeanceUE;
 use App\Models\Annee;
 use App\Models\Universite;
 use App\Models\Enseignant;
 use App\Models\UE;
+use Illuminate\Support\Facades\Session;
 use App\Models\EnseignantUE;
 use Illuminate\Http\Request;
 
@@ -22,7 +24,7 @@ class SeanceController extends Controller
      */
     public function index()
     {
-        $seances = Seance::with(['annee', 'universite', 'enseignant', 'ue', 'enseignant_ue'])->get();
+        $seances = Seance::where("universite_id", Session::get('uni_id'))->get();
         return view('seances.index', compact('seances'));
     }
 
@@ -54,7 +56,34 @@ class SeanceController extends Controller
      */
     public function store(Request $request)
     {
+        $ids = explode(',', $request->ue[0]);
+        $seance = new Seance();
+        $seance->annee_id = Annee::where('open', 1)->get()->first()->id;
+        $seance->universite_id = Session::get("uni_id");
+        $seance->enseignant_id = $request->ens_id;
+        $seance->enseignant_ue_id = $ids[0];  // Assign the first part as enseignant_ue_id
+        $seance->ue_id = $ids[1];
+        $seance->jour_semaine = $request->jour_semaine;
+        $seance->heure_debut = $request->heure_debut;
+        $seance->heure_fin = $request->heure_fin;
+        $seance->date_debut = $request->date_debut;
+        $seance->date_fin = $request->date_fin;
 
+        $seance->save();
+
+        $elts = json_decode($request->ens_sem, true);  // Decode JSON as an associative array
+        foreach ($elts as $elt) {
+            $seance_ue = new SeanceUE();
+            $seance_ue->faculte_id = $elt['faculteId'];        // Use array access syntax
+            $seance_ue->filiere_id = $elt['filiereId'];        // Use array access syntax
+            $seance_ue->ue_id = $ids[1];                       // Assuming $ids is defined earlier correctly
+            $seance_ue->seance_id = $seance->id;               // Assuming $seance->id is defined earlier
+            $seance_ue->semestre = $elt['semester'];           // Use array access syntax
+            $seance_ue->save();
+        }
+
+
+        return redirect()->route('seances.index')->with("Séance enregistrée avec succès");
     }
 
     /**

@@ -63,12 +63,10 @@ class AuthController extends Controller
             Session::put('on_year', $annee->libelle );
             Session::put('uni_name', $universite->nom );
             Session::put('uni_id', $universite->id );
-            return redirect()->route('dashboard.index');
+            return redirect()->route('dashboard.index')->with($this->success_msg('Bienvenue à vous'));
         }
 
-        return back()->with([
-            'error' => 'The provided credentials do not match our records.',
-        ]);
+        return redirect()->back()->with($this->error_msg("Email ou mot de passe invalide"));
     }
 
     /**
@@ -133,6 +131,7 @@ class AuthController extends Controller
     public function logout(Request $request)
     {
         Auth::logout();
-        return redirect()->route('login');
+        return redirect()->route('login')->with($this->success_msg("Au revoir."));;
+
     }
 }

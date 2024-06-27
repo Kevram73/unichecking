@@ -51,11 +51,11 @@
                                             <thead>
                                             <tr>
                                                 <th class="text-left">N°</th>
-                                                <th class="text-left col-md-3">Université</th>
                                                 <th class="text-left col-md-3">Enseignant</th>
                                                 <th class="text-left col-md-3">Unité E.</th>
                                                 <th class="text-left col-md-3">Date</th>
                                                 <th class="text-left col-md-3">Période</th>
+                                                <th class="text-left col-md-3">Jour de semaine</th>
                                                 <th class="text-left">Action</th>
                                             </tr>
                                             </thead>
@@ -64,8 +64,11 @@
                                             @foreach ($seances as $seance)
                                                 <tr>
                                                     <td class="text-left">{{ $loop->index + 1 }}</td>
-                                                    <td class="text-left">{{ $seance->code }}</td>
-                                                    <td class="text-left">{{ $seance->intitule }}</td>
+                                                    <td class="text-left">{{ $seance->enseignant()->nom }} {{ $seance->enseignant()->prenoms }}</td>
+                                                    <td class="text-left">{{ $seance->ue->intitule }}</td>
+                                                    <td class="text-left">{{ $seance->date_debut }} - {{ $seance->date_fin }}</td>
+                                                    <td class="text-left">{{ $seance->debut_time() }} - {{ $seance->fin_time() }}</td>
+                                                    <td class="text-left">{{ $seance->jour() }}</td>
                                                     <td class="text-left">
                                                         <button type="button" class="btn btn-sm btn-primary" id="editButton-{{ $seance->id }}"><i class="fa fa-edit"></i></button>
                                                         <button type="button" class="btn btn-sm btn-danger" id="deleteButton-{{ $seance->id }}"><i class="fa fa-trash"></i></button>

@@ -134,10 +134,11 @@ class EnseignantController extends Controller
         $grades = Grade::all();
         $enseignant_grades = EnseignantGrade::all();
         $postes = Poste::all();
-        $type_pieces = TypePiece::all();
+        $type_pieces = TypePieceIdentite::all();
+        $specialites = Specialite::all();
         $users = User::all();
         $enseignant = Enseignant::find($id);
-        return view("enseignants.edit", compact('enseignant', 'grades', 'enseignant_grades', 'postes', 'users', 'type_pieces'));
+        return view("enseignants.edit", compact('enseignant', 'grades', 'enseignant_grades', 'postes', 'users', 'type_pieces', 'specialites'));
     }
 
     /**

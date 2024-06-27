@@ -17,6 +17,8 @@
 
     <title>UNI-CHECK</title>
 
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/toastr.css" rel="stylesheet">
+
 
     <link href="{{ asset('assets/css/app.css') }}" rel="stylesheet">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600&display=swap" rel="stylesheet">
@@ -97,6 +99,40 @@
             let debut = parseInt(this.value);
             document.getElementById('date_fin_edit').value = debut+1;
         });
+    </script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/toastr.js/latest/js/toastr.min.js"></script>
+    <script>
+        @if (Session::has('message'))
+            var type = "{{ Session::get('alert-type', 'info') }}"
+            switch (type) {
+                case 'info':
+
+                    toastr.options.timeOut = 3000;
+                    toastr.info("{{ Session::get('message') }}");
+
+                    break;
+                case 'success':
+
+                    toastr.options.timeOut = 3000;
+                    toastr.success("{{ Session::get('message') }}");
+
+
+                    break;
+                case 'warning':
+
+                    toastr.options.timeOut = 3000;
+                    toastr.warning("{{ Session::get('message') }}");
+
+
+                    break;
+                case 'error':
+
+                    toastr.options.timeOut = 3000;
+                    toastr.error("{{ Session::get('message') }}");
+
+                    break;
+            }
+        @endif
     </script>
 </body>
 

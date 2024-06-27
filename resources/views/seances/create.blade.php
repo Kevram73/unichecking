@@ -34,10 +34,12 @@
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="ue">Unité d'enseignement</label>
-                                        <select name="ue" id="ue" class="form-control">
+                                        <select name="ue[]" id="ue" class="form-control" required>
+
                                             @foreach ($ues as $ue)
-                                            <option value="{{ $ue->ue()->id }}">{{ $ue->ue()->intitule }}</option>
+                                                <option value="{{ $ue->id }},{{ $ue->ue()->id }}">{{ $ue->ue()->intitule }}</option>
                                             @endforeach
+
 
                                         </select>
                                     </div>
@@ -66,13 +68,13 @@
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="heure_debut">Heure de début</label>
-                                        <input type="time" class="form-control" name="heure_debut">
+                                        <input type="time" class="form-control" name="heure_debut" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="heure_fin">Heure de fin</label>
-                                        <input type="time" class="form-control" name="heure_fin">
+                                        <input type="time" class="form-control" name="heure_fin" required>
                                     </div>
                                 </div>
                             </div>
@@ -81,13 +83,13 @@
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="date_debut">Date de début</label>
-                                        <input type="date" class="form-control" name="heure_debut">
+                                        <input type="date" class="form-control" name="date_debut" required>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="date_fin">Date de fin</label>
-                                        <input type="date" class="form-control" name="heure_fin">
+                                        <input type="date" class="form-control" name="date_fin" required>
                                     </div>
                                 </div>
                             </div>
@@ -131,7 +133,7 @@
                                                                        required>
                                                             </div>
                                                             <div class="mt-4">
-                                                                <button class="btn btn-success" type="submit" id="add_btn">Enregistrer</button>
+                                                                <button class="btn btn-success" type="button" id="add_semester">Enregistrer</button>
                                                             </div>
                                                         </form>
 
@@ -182,8 +184,8 @@
             showAddModal.onclick = () => addModal.showModal(); // Affiche le modal
             closeAddModal.onclick = () => addModal.close(); // Ferme le modal
 
-            const form = document.querySelector('form');
-            form.onsubmit = function (event) {
+            const form = document.getElementById('add_semester');
+            form.onclick = function (event) {
                 event.preventDefault(); // Empêche la soumission réelle du formulaire
                 const faculteId = document.getElementById('faculte').value;
                 const filiereId = document.getElementById('filiere').value;
@@ -217,7 +219,6 @@
                                         <hr/>
                                         <form method="POST">
                                             @csrf
-                                            @method('PUT')
                                             <div class="mt-4">
                                                 <label for="code">Code</label>
                                                 <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>

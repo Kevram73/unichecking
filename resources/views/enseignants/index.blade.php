@@ -42,10 +42,9 @@
                                                         <td class="text-left">{{ $enseignant->grade() }}</td>
                                                         <td class="text-left">{{ $enseignant->poste() }}</td>
                                                         <td class="text-left">
-                                                            <button type="button" class="btn btn-sm btn-primary"
-                                                                data-bs-toggle="modal"
-                                                                data-bs-target="#editModal-{{ $enseignant->id }}"><i
-                                                                    class="fa fa-edit"></i></button>
+                                                            <a href="{{ route('enseignants.edit', $enseignant->id) }}" class="btn btn-sm btn-primary"
+                                                                ><i
+                                                                    class="fa fa-edit"></i></a>
                                                             <button type="button"
                                                                 class="btn btn-sm btn-danger delete-btn"
                                                                 data-toggle="modal"
