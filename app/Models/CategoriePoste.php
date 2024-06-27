@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\Model;
 class CategoriePoste extends Model
 {
     use HasFactory;
-	protected $table = 'categorieposte';
+	protected $table = 'CategoriePoste';
 
 	protected $fillable = ['libelle', 'exoneration_horaire'];
 

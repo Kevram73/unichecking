@@ -92,7 +92,7 @@
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="piece_identite">Pièce d'identité</label>
-                                        <input type="file" class="file-input" name="piece" accept=".jfif,.jpg,.jpeg,.png,.gif">
+                                        <input type="file" cl ass="file-input" name="piece" accept=".jfif,.jpg,.jpeg,.png,.gif">
                                         <div id="divImageMediaPreview">
 
                                         </div>
