@@ -20,6 +20,9 @@
                     <button type="button" class="btn btn-primary" id="show-add-modal">
                         <i class="fa fa-plus"></i> Ajouter
                     </button>
+                    <a href="{{ route('enseignants.index') }}" class="btn btn-primary" id="show-add-modal">
+                        <i class="fa fa-check"></i> Terminer
+                    </a>
 
                     <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
                         <div style="display: flex; flex-direction: row; justify-content: space-between;">
