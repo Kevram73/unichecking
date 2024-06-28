@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:get/get.dart';
+import 'package:zktecopalm/helpers/ZkPalmApiHelper.dart';
 
 import '../controllers/CheckController.dart';
 import '../helpers/coloors.dart';
@@ -8,7 +9,7 @@ import '../helpers/coloors.dart';
 class PalmEnroll extends StatelessWidget {
   PalmEnroll({super.key});
 
-  // final CheckController checkController = Get.put(CheckController());
+  final CheckController checkController = Get.put(CheckController());
 
   @override
   Widget build(BuildContext context) {
@@ -26,6 +27,10 @@ class PalmEnroll extends StatelessWidget {
         children: [
 
           const Text("Enrollment ..."),
+          ElevatedButton(onPressed: ZKPalmApiHelper.checkStoragePermission, child: Text("Get Permissions")),
+          ElevatedButton(onPressed: ZKPalmApiHelper.tryGetUsbPermission, child: Text("Try")),
+          ElevatedButton(onPressed: ZKPalmApiHelper.openDevice, child: Text("Open Device")),
+          ElevatedButton(onPressed: ZKPalmApiHelper.onEnroll, child: Text("Enroll")),
           Padding(
             padding: const EdgeInsets.all(20.0),
             child: Center(
@@ -37,7 +42,7 @@ class PalmEnroll extends StatelessWidget {
                     viewType: 'camera_view',
                     layoutDirection: TextDirection.ltr,
                     creationParams: <String, dynamic>{
-                      "width": 500,
+                      "width": 800,
                       "height":500,
                     },
                     creationParamsCodec: StandardMessageCodec()

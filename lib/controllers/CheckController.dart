@@ -10,8 +10,14 @@ class CheckController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    startCountdown();
+    ZKPalmApiHelper.initiate();
   }
+
+  void stop_function(){
+    ZKPalmApiHelper.closeDevice();
+  }
+
+
 
   // Start the countdown timer and show toast messages
   void startCountdown() {

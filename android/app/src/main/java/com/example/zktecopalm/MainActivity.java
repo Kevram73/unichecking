@@ -53,6 +53,8 @@ public class MainActivity extends FlutterActivity {
     private EditText editText = null;
     private String regId = "";
 
+    private DBManager dbManager = new DBManager();
+
     @Override
     public void configureFlutterEngine(@NonNull FlutterEngine flutterEngine) {
         super.configureFlutterEngine(flutterEngine);
@@ -61,6 +63,9 @@ public class MainActivity extends FlutterActivity {
                 .setMethodCallHandler(
                         (call, result) -> {
                             switch (call.method) {
+                                case "initiate":
+                                    initiate();
+                                    break;
                                 case "checkStoragePermission":
                                     checkStoragePermission();
                                     result.success("Check Storage Permission");
@@ -73,19 +78,15 @@ public class MainActivity extends FlutterActivity {
                                     openDevice();
                                     result.success("Open device ...");
                                     break;
+                                case "onEnroll":
+                                    OnBnEnroll();
+                                    result.success("On Enroll ...");
+                                    break;
                                 case "closeDevice":
                                     closeDevice();
                                     result.success("Close device ...");
                                     break;
-                                case "enroll":
-                                    regId = call.argument("regId"); // Get the regId from the arguments
-                                    onEnroll();
-                                    result.success("Start enrollment ...");
-                                    break;
-                                case "match":
-                                    match();
-                                    result.success("Start matching ...");
-                                    break;
+
                                 default:
                                     result.notImplemented();
                                     break;
@@ -156,6 +157,13 @@ public class MainActivity extends FlutterActivity {
     private void afterGetUsbPermission()
     {
         openDevice();
+    }
+
+    private void initiate(){
+        checkStoragePermission();
+        zkPalmUSBManager = new ZKPalmUSBManager(this.getApplicationContext(), zkPalmUSBManagerListener);
+        zkPalmUSBManager.registerUSBPermissionReceiver();
+        dbManager.opendb();
     }
 
     private void openDevice()
@@ -260,34 +268,27 @@ public class MainActivity extends FlutterActivity {
         setResult("start capture succ");
     }
 
-    public void OnBnEnroll(View view) {
-        if (bstart) {
-            regId = editText.getText().toString();
+    public void OnBnEnroll() {
+
+            regId = "Kevin";
             if (null == regId || regId.isEmpty())
             {
-                textView.setText("please input your plamid");
+                setResult("please input your plamid");
                 return;
             }
             if (dbManager.isPalmExited(regId))
             {
-                textView.setText("the palm[" + regId + "] had registered!");
+                setResult("the palm[" + regId + "] had registered!");
                 return;
             }
             zkPalmApi.startEnroll();
-            textView.setText("You need to put your palm 5 times above the sensor");
-        }
-        else
-        {
-            textView.setText("please begin capture first");
-        }
+            setResult("You need to put your palm 5 times above the sensor");
+
     }
 
     public void OnBnVerify(View view) {
-        if (bstart) {
             zkPalmApi.cancelEnroll();
-        }else {
-            textView.setText("please begin capture first");
-        }
+
     }
 
     private void doDraw(SurfaceView surfaceView, Bitmap bitmap) {

@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:sqflite_common_ffi/sqflite_ffi.dart';
 import 'package:zktecopalm/screens/introscreen.dart';
+import 'package:zktecopalm/screens/palm_enroll.dart';
+import 'package:zktecopalm/tests/palm.dart';
 
 void main() {
   sqfliteFfiInit();
@@ -19,7 +21,7 @@ class MyApp extends StatelessWidget {
       title: 'UNI-CHECK',
       debugShowCheckedModeBanner: false,
       color: Colors.white,
-      home: IntroScreen(),
+      home: PalmEnroll(),
     );
   }
 }

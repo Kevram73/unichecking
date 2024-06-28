@@ -12,6 +12,24 @@ class ZKPalmApiHelper {
     }
   }
 
+  static Future<void> initiate() async {
+    try {
+      final result = await _channel.invokeMethod('initiate');
+      print(result);
+    } on PlatformException catch (e) {
+      print("Failed to initiate: '${e.message}'.");
+    }
+  }
+
+  static Future<void> onEnroll() async {
+    try {
+      final result = await _channel.invokeMethod('onEnroll');
+      print(result);
+    } on PlatformException catch (e) {
+      print("Failed to enroll: '${e.message}'.");
+    }
+  }
+
   static Future<void> tryGetUsbPermission() async {
     try {
       final result = await _channel.invokeMethod('tryGetUsbPermission');
