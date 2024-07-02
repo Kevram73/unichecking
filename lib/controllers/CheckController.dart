@@ -10,6 +10,9 @@ class CheckController extends GetxController {
   @override
   void onReady() {
     super.onReady();
+    ZKPalmApiHelper.openDevice();
+    ZKPalmApiHelper.tryGetUsbPermission();
+    ZKPalmApiHelper.enroll();
     startCountdown();
   }
 
@@ -33,6 +36,6 @@ class CheckController extends GetxController {
   // Navigate to the home screen
   void navigateToHome() async {
     await ZKPalmApiHelper.closeDevice();
-    Get.offAll(() => const StatusScreen());
+    Get.to(() => const StatusScreen());
   }
 }

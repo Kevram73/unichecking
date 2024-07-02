@@ -297,26 +297,25 @@ public class MainActivity extends FlutterActivity {
         }
     }
 
-    @SuppressLint("SetTextI18n")
     public void OnBnEnroll() {
         if (bstart) {
             regId = editText.getText().toString();
             if (regId.isEmpty())
             {
-                textView.setText("please input your plamid");
+                LogHelper.d("please input your plamid");
                 return;
             }
             if (dbManager.isPalmExited(regId))
             {
-                textView.setText("the palm[" + regId + "] had registered!");
+                LogHelper.d("the palm[" + regId + "] had registered!");
                 return;
             }
             zkPalmApi.startEnroll();
-            textView.setText("You need to put your palm 5 times above the sensor");
+            LogHelper.d("You need to put your palm 5 times above the sensor");
         }
         else
         {
-            textView.setText("please begin capture first");
+            LogHelper.d("please begin capture first");
         }
     }
 

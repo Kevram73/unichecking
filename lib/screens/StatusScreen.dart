@@ -6,7 +6,8 @@ class StatusScreen extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      body: Center(
+      appBar: AppBar(title: const Text("Hello"),),
+      body: const Center(
         child: Text("Success", style: TextStyle(fontSize: 25),),
       ),
     );

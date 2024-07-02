@@ -7,11 +7,11 @@ class HomeController extends GetxController {
   @override
   void onReady() {
     super.onReady();
-    Timer(const Duration(seconds: 4), navigateToHome);
+    Timer(const Duration(seconds: 1), navigateToHome);
   }
 
   // This function can be modified to navigate to different pages based on your app's flow
   void navigateToHome() {
-    Get.offAll(() => const Home());
+    Get.offAll(() => Home());
   }
 }

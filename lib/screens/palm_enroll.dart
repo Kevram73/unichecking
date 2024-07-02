@@ -8,7 +8,7 @@ import '../helpers/coloors.dart';
 class PalmEnroll extends StatelessWidget {
   PalmEnroll({super.key});
 
-  // final CheckController checkController = Get.put(CheckController());
+  final CheckController checkController = Get.put(CheckController());
 
   @override
   Widget build(BuildContext context) {

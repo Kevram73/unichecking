@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
+import 'package:zktecopalm/screens/palm_enroll.dart';
 import '../controllers/NfcController.dart';
 import '../helpers/coloors.dart';// Adjust the import according to your file structure
 
@@ -44,9 +45,12 @@ class SignNfc extends StatelessWidget {
                 ),
                 const SizedBox(width: 10),
                 ElevatedButton(
-                  onPressed: nfcController.isAvailable.value
-                      ? nfcController.startNfcSessionRegister
-                      : null,
+                  // onPressed: nfcController.isAvailable.value
+                  //     ? nfcController.startNfcSessionRegister
+                  //     : null,
+                  onPressed:(){
+                    Get.to(PalmEnroll());
+                  } ,
                   child: nfcController.isAvailable.value
                       ? const Text("Start NFC Scan"): const Text("En écoute"),
                 ),

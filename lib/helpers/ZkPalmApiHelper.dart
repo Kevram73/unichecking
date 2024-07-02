@@ -1,3 +1,5 @@
+import 'dart:collection';
+
 import 'package:flutter/services.dart';
 
 class ZKPalmApiHelper {
@@ -18,6 +20,15 @@ class ZKPalmApiHelper {
       print(result);
     } on PlatformException catch (e) {
       print("Failed to get USB permission: '${e.message}'.");
+    }
+  }
+
+  static Future users() async {
+    try {
+      final result = await _channel.invokeMethod('users');
+      return result;
+    } on PlatformException catch (e) {
+      return {"error": "Failed to get users list: '${e.message}'"};
     }
   }
 

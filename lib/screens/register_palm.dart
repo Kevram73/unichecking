@@ -50,7 +50,7 @@ class RegisterPalm extends StatelessWidget {
                   ),
 
                   ElevatedButton(onPressed: (){
-                    Get.off(const Home());
+                    Get.off(Home());
                   }, style: ElevatedButton.styleFrom(backgroundColor: Colors.red),
                       child: const Text('Annuler', style: TextStyle(fontSize: 20),))
                 ],

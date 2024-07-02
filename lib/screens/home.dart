@@ -5,10 +5,13 @@ import 'package:zktecopalm/screens/admin/users.dart';
 import 'package:zktecopalm/screens/in_nfc.dart';
 import 'package:zktecopalm/screens/matricule_in.dart';
 
+import '../controllers/MainController.dart';
 import '../helpers/coloors.dart';
 
 class Home extends StatelessWidget {
-  const Home({Key? key}) : super(key: key);
+  Home({Key? key}) : super(key: key);
+
+  final MainController _controller = Get.put(MainController());
 
   @override
   Widget build(BuildContext context) {
@@ -59,33 +62,67 @@ class Home extends StatelessWidget {
         },
         child: const FaIcon(FontAwesomeIcons.plus, color: Colors.white),
       ),
-      body: Center(
-        child: Column(
-          mainAxisAlignment: MainAxisAlignment.center,
-          crossAxisAlignment: CrossAxisAlignment.center,
-          children: [
-            ElevatedButton(
-              onPressed: () {
-                Get.to(const InNfc());
-              },
-              style: ElevatedButton.styleFrom(
-                  backgroundColor: const Color(0xFF1D5620),
-                  shape: const CircleBorder(),
-                  padding: const EdgeInsets.all(60),
-                  elevation: 60,
-                  shadowColor: Colors.black
-              ),
-              child: const Text(
-                'SCAN',
-                style: TextStyle(
-                    fontSize: 28,
-                    fontWeight: FontWeight.bold,
-                  color: Colors.white
+      body: Column(
+        mainAxisAlignment: MainAxisAlignment.center,
+        crossAxisAlignment: CrossAxisAlignment.center,
+        children: [
+
+          const Row(
+            mainAxisAlignment: MainAxisAlignment.center,
+            children: [
+              Text("Timelapse: 00:00:00", style: TextStyle(fontSize: 30),),
+            ],
+          ),
+          const SizedBox(height: 40),
+          Text("Votre carte NFC", style: TextStyle(fontSize: 24),),
+          const SizedBox(height: 40),
+          Center(
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.center,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                ElevatedButton(
+                  onPressed: _controller.isPressed?null: () {_controller.isPressed = false;},
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: const Color(0xFF1D5620),
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(50),
+                      elevation: 50,
+                      shadowColor: Colors.black
+                  ),
+                  child: const Text(
+                    'BEGIN',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w300,
+                      color: Colors.white
+                    ),
+                  ),
+
                 ),
-              ),
+                ElevatedButton(
+                  onPressed: _controller.isPressed?() {_controller.isPressed = false;} : null,
+                  style: ElevatedButton.styleFrom(
+                      backgroundColor: _controller.isPressed? const Color(0xFF1D5620): Colors.grey,
+                      shape: const CircleBorder(),
+                      padding: const EdgeInsets.all(50),
+                      elevation: 50,
+                      shadowColor: Colors.black
+                  ),
+                  child: const Text(
+                    'END',
+                    style: TextStyle(
+                        fontSize: 20,
+                        fontWeight: FontWeight.w300,
+                        color: Colors.white
+                    ),
+                  ),
+
+                ),
+              ],
             ),
-          ],
-        ),
+          ),
+        ],
       ),
     );
   }
