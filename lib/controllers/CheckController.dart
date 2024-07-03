@@ -8,12 +8,14 @@ class CheckController extends GetxController {
   var countdown = 5.obs;
 
   @override
-  void onReady() {
+  void onReady() async{
     super.onReady();
-    ZKPalmApiHelper.openDevice();
-    ZKPalmApiHelper.tryGetUsbPermission();
-    ZKPalmApiHelper.enroll();
-    startCountdown();
+    await ZKPalmApiHelper.checkStoragePermission();
+    await ZKPalmApiHelper.tryGetUsbPermission();
+    await ZKPalmApiHelper.openDevice();
+    
+    //await ZKPalmApiHelper.enroll();
+    // startCountdown();
   }
 
   // Start the countdown timer and show toast messages

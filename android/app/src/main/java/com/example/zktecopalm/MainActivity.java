@@ -157,9 +157,11 @@ public class MainActivity extends FlutterActivity {
 
     private void tryGetUSBPermission()
     {
+        if (zkPalmUSBManager == null) {
+            zkPalmUSBManager = new ZKPalmUSBManager(this, zkPalmUSBManagerListener);
+        }
         zkPalmUSBManager.initUSBPermission();
     }
-
 
     private void afterGetUsbPermission()
     {
@@ -211,8 +213,6 @@ public class MainActivity extends FlutterActivity {
                 }
             }
 
-
-
             @Override
             public void onEnroll(int actionResult, int times, byte[] verTemplate, byte[] regTemplate) {
                 int retVal = 0;
@@ -249,7 +249,6 @@ public class MainActivity extends FlutterActivity {
                     setResult("enroll failed, ret=" + actionResult);
                 }
             }
-
 
             @Override
             public void onFeatureInfo(int actionResult, int imageQuality, int templateQuality, int[] rect) {
@@ -436,6 +435,23 @@ public class MainActivity extends FlutterActivity {
         public PlatformView create(Context context, int id, @Nullable Object args) {
             surfaceView = new SurfaceView(context);
             surfaceView.setLayoutParams(new ViewGroup.LayoutParams(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.MATCH_PARENT));
+            SurfaceHolder holder = surfaceView.getHolder();
+            holder.addCallback(new SurfaceHolder.Callback() {
+                @Override
+                public void surfaceCreated(SurfaceHolder holder) {
+                    // Initialize or prepare surface view here
+                }
+
+                @Override
+                public void surfaceChanged(SurfaceHolder holder, int format, int width, int height) {
+                    // Handle surface changes if needed
+                }
+
+                @Override
+                public void surfaceDestroyed(SurfaceHolder holder) {
+                    // Clean up resources
+                }
+            });
             return new SurfaceViewPlatformView(surfaceView);
         }
 

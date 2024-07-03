@@ -30,15 +30,14 @@ class PalmEnroll extends StatelessWidget {
             padding: const EdgeInsets.all(20.0),
             child: Center(
               child: Container(
-                width: size.width/2,
+                width: size.width,
                 height: size.height/2,
                 color: Colors.black,
                 child: const AndroidView(
                     viewType: 'camera_view',
                     layoutDirection: TextDirection.ltr,
                     creationParams: <String, dynamic>{
-                      "width": 500,
-                      "height":500,
+                      
                     },
                     creationParamsCodec: StandardMessageCodec()
                 ),
