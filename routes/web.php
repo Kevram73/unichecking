@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -64,6 +65,8 @@ Route::get('/enseignant/ues/{id}', [EnseignantController::class, 'ues_enseignant
 Route::post('/enseignant/ues', [EnseignantController::class, 'store_ue_ens'])->name('enseignants.ues.store');
 Route::delete('/enseignant/delete/{id}', [EnseignantController::class, 'ue_delete'])->name('enseignants.ues.ue_delete');
 Route::put('/enseignant/update/{id}', [EnseignantController::class, 'ue_update'])->name('enseignants.ues.ue_update');
+
+Route::get('/transactions', [TransactionController::class, 'index'])->name('transactions');
 
 // Route::prefix('annees')->group(function () {
 //     Route::get('/', [AnneeController::class, 'index']);

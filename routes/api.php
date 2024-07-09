@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\LogController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -18,3 +19,8 @@ Route::post('/log/heartbeat', [CallbackController::class, 'heartbeat']);
 Route::post('/log/getback', [CallbackController::class, 'getback']);
 
 Route::post('/scan', [CallbackController::class, 'testSaveScan']);
+
+Route::get('/endpoint', [LogController::class, 'index']);
+Route::post('/endpoint', [LogController::class, 'store']);
+Route::put('/endpoint', [LogController::class, 'update']);
+Route::delete('/endpoint', [LogController::class, 'destroy']);
