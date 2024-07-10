@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\HelpController;
+use App\Http\Controllers\ScannerController;
 use App\Http\Controllers\TransactionController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
@@ -57,6 +58,7 @@ Route::resource('type_deplacements', TypeDeplacementController::class);
 Route::resource('type_pieces', TypePieceIdentiteController::class);
 Route::resource('ues', UEController::class);
 Route::resource('universites', UniversiteController::class);
+Route::resource('scanners', ScannerController::class);
 
 Route::get('/enseignant/choose', [SeanceController::class, 'choose_enseignant'])->name('seance.choose');
 Route::get('/enseignant/choose/{id}', [SeanceController::class, 'choice'])->name('seance.choice');

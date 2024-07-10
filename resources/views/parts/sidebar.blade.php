@@ -53,6 +53,12 @@
                 <a class="sidebar-link" href="{{ route('postes.index') }}">
                     <i class="align-middle fa fa-briefcase"></i> <span class="align-middle">Postes</span>
                 </a>
+            </li>*
+
+            <li class="sidebar-item @if(Request::route()->getName() == 'scanners.index') active @endif">
+                <a class="sidebar-link" href="{{ route('scanners.index') }}">
+                    <i class="align-middle fa fa-briefcase"></i> <span class="align-middle">Scanners</span>
+                </a>
             </li>
 
             <li class="sidebar-item @if(Request::route()->getName() == 'grades.index') active @endif">

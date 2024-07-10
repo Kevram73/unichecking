@@ -2,6 +2,7 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Enseignant;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
@@ -84,5 +85,10 @@ class FetchDataCron extends Command
         } else {
             logger()->error('Erreur lors de la requête GET', ['response' => $response]);
         }
+    }
+
+    private function seance_matching($emp){
+        $enseignant = Enseignant::find($emp);
+
     }
 }

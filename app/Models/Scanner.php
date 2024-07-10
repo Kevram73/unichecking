@@ -11,14 +11,12 @@ class Scanner extends Model
 {
     use HasFactory;
 	protected $table = 'Scanner';
-	
+
 	protected $fillable = ['universite_id', 'num_serie'];
- 
-	/**
-     * 
-     */
-    public function universite(): BelongsTo
-    {
-        return $this->belongsTo(Universite::class);
-    }	 
+
+    public function universite(){
+        return Universite::find($this->universite_id);
+    }
+
+
 }
