@@ -2,11 +2,16 @@
 
 namespace App\Console\Commands;
 
+use App\Models\Deplacement;
 use App\Models\Enseignant;
+use App\Models\Scanner;
+use App\Models\ScanPresence;
 use App\Models\Transaction;
 use Carbon\Carbon;
 use Illuminate\Console\Command;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Http;
+use Throwable;
 
 class FetchDataCron extends Command
 {
@@ -74,6 +79,9 @@ class FetchDataCron extends Command
                         "company" => $datum['company'],
                         "emp" => $datum["terminal"]
                     ]);
+
+                    $universite = Scanner::where('num_serie', $datum['terminal_sn'])->get();
+                    $this->saveScan($universite, $datum['emp_code'], $datum["punch_time"]);
                 }
 
                 if (isset($responseData['next']) && $responseData['next'] != null) {
@@ -87,8 +95,106 @@ class FetchDataCron extends Command
         }
     }
 
-    private function seance_matching($emp){
-        $enseignant = Enseignant::find($emp);
 
+    public function saveScan($universite_id, $ens_id, $dthr){
+        $minutes = 5;
+        $ens = Enseignant::find($ens_id);
+        if ($ens == null)
+            return new ScanPresence();
+        $dthr_php = date_create_from_format('Y-m-d H:i:s', $dthr);
+
+        $dt = date_format($dthr_php, 'Y-m-d');
+        $hr = date_format($dthr_php, 'H:i:s');
+        $hr_avt = date_format(date_sub(date_create_from_format('H:i:s', $hr),
+            date_interval_create_from_date_string("$minutes minutes")), 'H:i:s');
+        $hr_apr = date_format(date_add(date_create_from_format('H:i:s', $hr),
+            date_interval_create_from_date_string("$minutes minutes")), 'H:i:s');
+
+        $sce = null;
+
+        $dpl = Deplacement::where('date_debut', '>=', $dt)
+            ->where('date_fin', '<=', $dt)
+            ->where('enseignant_id', $ens_id)
+            ->where('universite_id', $universite_id);
+
+        if ($dpl->count() == 0){
+            $sce = DB::table('Seance')->where("enseignant_id", "$ens_id")
+                ->where('universite_id', $universite_id)
+                ->where('date_debut', '<=', $dt)
+                ->where('date_fin', '>=', $dt)
+                ->where('heure_debut', '<=', $hr_apr)
+                ->where('heure_fin', '>=', $hr_avt)
+                ->where('jour_semaine', date_format($dthr_php, "N"))
+                ->whereNotIn('id', function($query) use($dt){
+                    return $query->select('seance_id')->from('ScanPresence')
+                        ->where('date_scan', $dt)
+                        ->whereNotNull('heure_scan_fin');
+                })
+                ->first();
+        }
+
+        $sp = ScanPresence::when($sce, function($query) use ($sce){
+            return $query->where('seance_id', $sce->id);
+        })->where('enseignant_id', $ens_id)
+            ->where('date_scan', $dt)
+            ->where('heure_scan_deb', '<', $dthr)
+            ->whereNull('heure_scan_fin')
+            ->orderBy('heure_scan_deb', 'DESC')
+            ->first();
+
+        try {
+            DB::beginTransaction();
+            if ($sp){
+                $old_seance_id = $sp->seance_id;
+                $new_seance_id = ($sce) ? $sce->id : 0;
+                if ($old_seance_id == 0){
+                    $sp->seance_id = $new_seance_id;
+                }
+                $sp->heure_scan_fin = $dthr;
+                $db = date_create($sp->heure_scan_deb);
+                // $diff = date_diff($db, $dthr_php);
+                // $nbHr = $diff->format("%H:%i");
+                // $sp->nb_hr = $nbHr;
+                $diff_in_seconds = $dthr_php->getTimestamp() - $db->getTimestamp();
+                $h = floor($diff_in_seconds / 36) / 100;
+                $sp->nb_hr = $h;
+
+
+                if ($old_seance_id == 0)
+                    $sp->nb_hr_cpt = 0;
+                else {
+                    if ($new_seance_id == 0){
+                        $sp->nb_hr_cpt = 0;
+                    } else {
+                        $db = date_create($sp->heure_scan_deb);
+                        $df = date_create_from_format("Y-m-d H:i:s", "{$dt} {$sce->heure_fin}");
+                        if ($df > $dthr_php)
+                            $df = $dthr_php;
+                        // $diff = date_diff($db, $df);
+                        // $nbHr = $diff->format("%H:%i");
+                        // $sp->nb_hr_cpt = $nbHr;
+                        $diff_in_seconds = $df->getTimestamp() - $db->getTimestamp();
+                        $h = floor($diff_in_seconds / 36) / 100;
+                        $sp->nb_hr_cpt = $h;
+                    }
+                }
+            } else {
+                $sp = new ScanPresence();
+                $sp->seance_id = ($sce) ? $sce->id : 0;
+                $sp->universite_id = $universite_id;
+                $sp->enseignant_id = $ens_id;
+                $sp->date_scan = $dt;
+                $sp->heure_scan_deb = $dthr;
+            }
+
+            $sp->save();
+
+            DB::commit();
+        } catch (Throwable $e){
+            DB::rollback();
+            return 0;
+        }
+
+        return $sp;
     }
 }
