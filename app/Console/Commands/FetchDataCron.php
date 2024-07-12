@@ -37,8 +37,8 @@ class FetchDataCron extends Command
     {
 
         info("Cron Job running at ". now());
-        $time = Carbon::now();
-        $time5 = $time->subMinutes(5);
+        $time = Carbon::now()->toDateTimeString();
+        $time5 = Carbon::now()->subMinutes(5)->toDateTimeString();
 
         $url = "http://13.213.68.48:8081/iclock/api/transactions?start_time=$time5&end_time=$time";
         $token = "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiY2ViYjRmNzgtMjI1OS0xMWVmLWE4OTYtMDI0YmU1MzBjNzZjIiwidXNlcm5hbWUiOiJhZG1pbiIsImV4cCI6MTcyMTA2NTIwMCwiZW1haWwiOiJhZG1pbkB6a3RlY28uY29tIiwib3JpZ19pYXQiOjE3MjA0NjA0MDB9.JK16PqHc4Jl5bKYOQvCMoGT-RbVky0rdxPybj7ABKUs";
