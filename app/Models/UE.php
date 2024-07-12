@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class UE extends Model
 {
     use HasFactory;
-	protected $table = 'UE';
-	
+	protected $table = 'ue';
+
 	protected $fillable = ['universite_id', 'intitule', 'description', 'code', 'volume_horaire'];
 }

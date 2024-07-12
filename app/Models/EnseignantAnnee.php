@@ -10,20 +10,20 @@ use Illuminate\Database\Eloquent\Model;
 class EnseignantUE extends Model
 {
     use HasFactory;
-	protected $table = 'EnseignantUE';
-	
+	protected $table = 'enseignantue';
+
 	protected $fillable = [
 	'annee_id', 'enseignant_id', 'nb_hr_cpt'];
-	
+
     /**
-     * 
+     *
      */
     public function annee(): BelongsTo
     {
         return $this->belongsTo(Annee::class);
-    }			
+    }
     /**
-     * 
+     *
      */
     public function enseignant(): BelongsTo
     {

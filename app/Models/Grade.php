@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Grade extends Model
 {
     use HasFactory;
-	protected $table = 'Grade';
-	
+	protected $table = 'grade';
+
 	protected $fillable = ['intitule', 'volume_horaire'];
 }

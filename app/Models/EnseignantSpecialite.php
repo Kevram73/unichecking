@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class EnseignantSpecialite extends Model
 {
     use HasFactory;
-	protected $table = 'EnseignantSpecialite';
+	protected $table = 'enseignantspecialite';
 
 	protected $fillable = ['enseignant_id', 'specialite_id', 'annee_id'];
 
@@ -37,5 +37,5 @@ class EnseignantSpecialite extends Model
 					->withDefault(new Enseignant());
     }
 
-    
+
 }

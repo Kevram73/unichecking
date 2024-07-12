@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class TypePieceIdentite extends Model
 {
     use HasFactory;
-	protected $table = 'TypePieceIdentite';
-	
+	protected $table = 'typepieceidentite';
+
 	protected $fillable = ['libelle'];
 }

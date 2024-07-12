@@ -11,7 +11,7 @@ use Carbon\Carbon;
 class Seance extends Model
 {
     use HasFactory;
-	protected $table = 'Seance';
+	protected $table = 'seance';
 
 	protected $fillable = ['annee_id', 'universite_id', 'enseignant_id', 'ue_id', 'enseignant_ue_id',
 	'jour_semaine', 'heure_debut', 'heure_fin', 'date_debut', 'date_fin'];

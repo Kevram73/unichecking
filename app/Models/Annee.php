@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Annee extends Model
 {
     use HasFactory;
-	protected $table = 'Annee';
+	protected $table = 'annee';
 
 	protected $fillable = ['libelle', 'date_debut', 'date_fin', 'open', 'openable'];
 

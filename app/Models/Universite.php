@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Universite extends Model
 {
     use HasFactory;
-	protected $table = 'Universite';
-	
+	protected $table = 'universite';
+
 	protected $fillable = ['nom'];
 }

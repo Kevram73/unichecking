@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 class DateSeance extends Model
 {
     use HasFactory;
-	protected $table = 'DateSeance';
-	
+	protected $table = 'dateseance';
+
 	protected $fillable = ['seance_id', 'date_seance'];
-	
+
     /**
-     * 
+     *
      */
     public function seance(): BelongsTo
     {
         return $this->belongsTo(Poste::class);
-    }	
+    }
 }

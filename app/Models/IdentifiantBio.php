@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 class IdentifiantBio extends Model
 {
     use HasFactory;
-	protected $table = 'IdentifiantBio';
-	
+	protected $table = 'identifiantbio';
+
 	protected $fillable = ['nfc', 'face', 'finger', 'enseignant_id'];
- 
+
 	/**
-     * 
+     *
      */
     public function enseignant(): BelongsTo
     {
         return $this->belongsTo(Enseignant::class);
-    }	 
+    }
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Logs extends Model
 {
     use HasFactory;
-	protected $table = 'Logs';
-	
+	protected $table = 'logs';
+
 	protected $fillable = ['contenu', 'type'];
 }

@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Deplacement extends Model
 {
     use HasFactory;
-	protected $table = 'Deplacement';
+	protected $table = 'deplacement';
 
 	protected $fillable = ['annee_id', 'universite_id', 'type_deplacement_id', 'enseignant_id',
 	'description', 'date_debut', 'date_fin',

@@ -10,8 +10,8 @@ use Illuminate\Database\Eloquent\Model;
 class TypeDeplacement extends Model
 {
     use HasFactory;
-	protected $table = 'TypeDeplacement';
-	
+	protected $table = 'typedeplacement';
+
 	protected $fillable = ['designation'];
-	
+
 }

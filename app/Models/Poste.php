@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Poste extends Model
 {
     use HasFactory;
-	protected $table = 'Poste';
+	protected $table = 'poste';
 
 	protected $fillable = ['libelle', 'categorie_poste_id'];
 

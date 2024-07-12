@@ -10,15 +10,15 @@ use Illuminate\Database\Eloquent\Model;
 class EnseignantScanner extends Model
 {
     use HasFactory;
-	protected $table = 'EnseignantScanner';
-	
+	protected $table = 'enseignantscanner';
+
 	protected $fillable = ['enseignant_id', 'num_serie', 'sender'];
 	/**
-     * 
+     *
      */
     public function scanner(): BelongsTo
     {
         return $this->belongsTo(Scanner::class, 'num_serie', 'num_serie');
     }
-	
+
 }

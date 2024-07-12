@@ -10,7 +10,7 @@ use Illuminate\Database\Eloquent\Model;
 class Scanner extends Model
 {
     use HasFactory;
-	protected $table = 'Scanner';
+	protected $table = 'scanner';
 
 	protected $fillable = ['universite_id', 'num_serie'];
 
