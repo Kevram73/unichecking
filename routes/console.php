@@ -11,4 +11,4 @@ use Illuminate\Support\Facades\Schedule;
 
 //Schedule::job(new FetchDataJob(), 'transactions', 'database')->everyFiveMinutes();
 
-Schedule::command('fetchData:cron')->everyFiveMinutes();
+Schedule::command('fetchData:cron')->everyFifteenSeconds();
