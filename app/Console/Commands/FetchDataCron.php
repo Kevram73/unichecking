@@ -4,6 +4,7 @@ namespace App\Console\Commands;
 
 use App\Models\Deplacement;
 use App\Models\Enseignant;
+use App\Models\Logs;
 use App\Models\Scanner;
 use App\Models\ScanPresence;
 use App\Models\Transaction;
@@ -34,9 +35,14 @@ class FetchDataCron extends Command
      */
     public function handle()
     {
+
         info("Cron Job running at ". now());
         $time = Carbon::now()->subHours(2);
         $time5 = $time->subMinutes(5);
+        $log= new Logs();
+        $log->contenu = "$time";
+        $log->type = "$time";
+        $log->save();
         $url = "http://13.213.68.48:8081/iclock/api/transactions?start_time=$time5&end_time=$time";
         $token = "JWT eyJ0eXAiOiJKV1QiLCJhbGciOiJIUzI1NiJ9.eyJ1c2VyX2lkIjoiY2ViYjRmNzgtMjI1OS0xMWVmLWE4OTYtMDI0YmU1MzBjNzZjIiwidXNlcm5hbWUiOiJhZG1pbiIsImV4cCI6MTcyMTA2NTIwMCwiZW1haWwiOiJhZG1pbkB6a3RlY28uY29tIiwib3JpZ19pYXQiOjE3MjA0NjA0MDB9.JK16PqHc4Jl5bKYOQvCMoGT-RbVky0rdxPybj7ABKUs";
 
