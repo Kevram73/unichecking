@@ -57,6 +57,10 @@ class FetchDataCron extends Command
             'start_time' => $start_time,
             'end_time' => $end_time,
         ]);
+        $log= new Logs();
+        $log->contenu = $response->effectiveUri();
+        $log->type = $response->effectiveUri();
+        $log->save();
 
         if ($response->successful()) {
             $responseData = $response->json();
