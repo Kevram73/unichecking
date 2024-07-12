@@ -37,7 +37,7 @@ class FetchDataCron extends Command
     {
 
         info("Cron Job running at ". now());
-        $time = Carbon::now()->subHours(2);
+        $time = Carbon::now();
         $time5 = $time->subMinutes(5);
         $log= new Logs();
         $log->contenu = "$time";
