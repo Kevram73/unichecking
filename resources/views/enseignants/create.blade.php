@@ -24,6 +24,16 @@
                         <form action="{{ route('enseignants.store') }}" method="POST">
                             @csrf
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-body">
+                                        <label for="matricule">Matricule</label>
+                                        <input type="text" class="form-control" name="matricule" required>
+                                    </div>
+                                </div>
+
+                            </div>
+
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="nom">Nom</label>

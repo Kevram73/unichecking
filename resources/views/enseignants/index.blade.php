@@ -26,6 +26,7 @@
                                             <thead>
                                                 <tr>
                                                     <th class="text-left">ID</th>
+                                                    <th class="text-left">Matricule</th>
                                                     <th class="text-left">Nom</th>
                                                     <th class="text-left">Prénoms</th>
                                                     <th class="text-left">Fonction</th>
@@ -37,6 +38,7 @@
                                                 @foreach ($enseignants as $enseignant)
                                                     <tr>
                                                         <td class="text-left">{{ $loop->index + 1 }}</td>
+                                                        <td class="text-left">{{ $enseignant->matricule }}</td>
                                                         <td class="text-left">{{ $enseignant->nom }}</td>
                                                         <td class="text-left">{{ $enseignant->prenoms }}</td>
                                                         <td class="text-left">{{ $enseignant->grade() }}</td>

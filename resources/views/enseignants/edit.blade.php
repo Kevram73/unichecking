@@ -24,6 +24,14 @@
                         <form action="{{ route('enseignants.update', $enseignant->id) }}" method="POST">
                             @csrf
                             <div class="row">
+                                <div class="col-md-12">
+                                    <div class="card-body">
+                                        <label for="matricule">Matricule</label>
+                                        <input type="text" class="form-control" name="matricule" value="{{ $enseignant->matricule }}" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="row">
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="nom">Nom</label>

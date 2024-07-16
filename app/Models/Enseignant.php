@@ -14,7 +14,7 @@ class Enseignant extends Model
 
 	protected $fillable = ['nom', 'prenoms', 'email', 'grade_id', 'poste_id',
 	'enseignant_grade_id', 'type_piece_id', 'detail_poste',
-	'user_id', 'nb_hr_cum'];
+	'user_id', 'nb_hr_cum', 'matricule'];
     /**
      *
      */

@@ -24,7 +24,7 @@ class ScannerController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'num_serie' => 'required',
+            'num_serie' => 'required|unique:scanner',
             'universite_id' => 'required',
         ]);
 

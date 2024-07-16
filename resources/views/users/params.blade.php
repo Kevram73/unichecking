@@ -42,7 +42,7 @@
                                         <select name="university" id="university" class="form-control">
                                             <option>Choisissez une université</option>
                                             @foreach($universites as $universite)
-                                                <option value="{{ $universite->id }}" >{{ $universite->nom }}</option>
+                                                <option value="{{ $universite->id }}" @if($universite->id == $university) selected @endif>{{ $universite->nom }}</option>
                                             @endforeach
                                         </select>
                                     </div>
