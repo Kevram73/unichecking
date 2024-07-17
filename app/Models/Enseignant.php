@@ -87,4 +87,14 @@ class Enseignant extends Model
         return $this->belongsTo(User::class)
 					->withDefault((new User())->toArray());
     }
+
+    public function hr_cum(){
+        $nbr_hr = 0;
+        $presences = ScanPresence::where("enseignant_id", $this->id)->get()->toArray();
+        foreach($presences as $presence){
+            $nbr_hr += $presence->nb_hr_cpt;
+        }
+
+        return $nbr_hr;
+    }
 }
