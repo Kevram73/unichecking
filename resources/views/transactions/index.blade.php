@@ -48,23 +48,11 @@
                                                 <th class="text-left">N°</th>
                                                 <th class="text-left">emp_code</th>
                                                 <th class="text-left">punch_time</th>
-                                                <th class="text-left">punch_state</th>
                                                 <th class="text-left">terminal_sn</th>
-                                                <th class="text-left">terminal_alias</th>
-                                                <th class="text-left">area_alias</th>
-                                                <th class="text-left">longitude</th>
-                                                <th class="text-left">latitude</th>
                                                 <th class="text-left">gps_location</th>
-                                                <th class="text-left">mobile</th>
-                                                <th class="text-left">source</th>
-                                                <th class="text-left">purpose</th>
-                                                <th class="text-left">reserved</th>
                                                 <th class="text-left">upload_time</th>
-                                                <th class="text-left">sync_status</th>
                                                 <th class="text-left">sync_time</th>
                                                 <th class="text-left">company</th>
-                                                <th class="text-left">emp</th>
-                                                <th class="text-left">terminal</th>
                                                 <th class="text-left">Action</th>
                                             </tr>
                                             </thead>
