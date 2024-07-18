@@ -54,6 +54,7 @@ class EnseignantController extends Controller
     public function store(Request $request)
     {
         $enseignant = new Enseignant();
+        $enseignant->matricule = $request->matricule;
         $enseignant->nom = $request->nom;
         $enseignant->prenoms = $request->prenoms;
         $enseignant->email = $request->email;
@@ -148,6 +149,7 @@ class EnseignantController extends Controller
     {
         try{
             $enseignant = Enseignant::find($id);
+            $enseignant->matricule = $request->matricule;
             $enseignant->nom = $request->nom;
             $enseignant->prenoms = $request->prenoms;
             $enseignant->email = $request->email;
