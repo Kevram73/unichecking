@@ -15,10 +15,10 @@ return Application::configure(basePath: dirname(__DIR__))
 
 
 		api: __DIR__.'/../routes/api.php',
-		apiPrefix: 'api',
+		apiPrefix: '',
     )
     ->withMiddleware(function (Middleware $middleware) {
-       
+
     })
     ->withExceptions(function (Exceptions $exceptions) {
         //

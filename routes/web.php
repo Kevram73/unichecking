@@ -26,10 +26,13 @@ use App\Http\Controllers\FiliereController;
 use App\Http\Controllers\ScanPresenceController;
 use App\Http\Controllers\DashboardController;
 use App\Http\Controllers\AuthController;
+use App\Http\Controllers\ExecController;
 
 
 
 Route::get('/', [AuthController::class, 'login_get'])->name('login');
+
+
 Route::post('/login', [AuthController::class, 'login_post'])->name('auth.login');
 Route::get('/forgot/password', [AuthController::class, 'forget_pwd_get'])->name('forgot_password');
 Route::post('/forgot/password', [AuthController::class, 'forget_pwd_post'])->name('fpwd');
