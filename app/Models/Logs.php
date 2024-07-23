@@ -12,5 +12,5 @@ class Logs extends Model
     use HasFactory;
 	protected $table = 'logs';
 
-	protected $fillable = ['contenu', 'type'];
+	protected $fillable = ['contenu', 'type', "dev_id"];
 }
