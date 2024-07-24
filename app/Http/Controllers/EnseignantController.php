@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\CategoriePoste;
 use App\Models\Faculte;
 use App\Models\Specialite;
 use App\Models\Annee;
@@ -17,6 +18,7 @@ use App\Models\EnseignantSpecialite;
 use App\Models\EnseignantUE;
 use App\Models\UE;
 use Exception;
+use Illuminate\Support\Facades\DB;
 
 class EnseignantController extends Controller
 {
@@ -43,8 +45,9 @@ class EnseignantController extends Controller
         $specialites = Specialite::all();
         $facultes = Faculte::all();
         $users = User::all();
+        $ues = UE::all();
 
-        return view("enseignants.create", compact('facultes','grades', 'enseignant_grades', 'postes', 'type_pieces', 'users', 'specialites'));
+        return view("enseignants.create", compact('facultes','grades', 'enseignant_grades', 'postes', 'type_pieces', 'users', 'specialites', 'ues'));
 
     }
 
@@ -53,35 +56,76 @@ class EnseignantController extends Controller
      */
     public function store(Request $request)
     {
-        $enseignant = new Enseignant();
-        $enseignant->matricule = $request->matricule;
-        $enseignant->nom = $request->nom;
-        $enseignant->prenoms = $request->prenoms;
-        $enseignant->email = $request->email;
-        $enseignant->grade_id = $request->fonction;
-        $enseignant->poste_id = $request->poste;
-        $enseignant->type_piece_id = $request->type_piece;
-        $enseignant->detail_poste = $request->detail_poste;
-        $enseignant->save();
+        $request->validate([
+            'matricule' => 'required',
+            'nom' => 'required',
+            'prenoms' => 'required',
+            'email' => 'required',
+        ]);
 
-        $enseignant_grade = new EnseignantGrade();
-        $enseignant_grade->grade_id = $request->fonction;
-        $enseignant_grade->enseignant_id = $enseignant->id;
-        $enseignant_grade->poste_id = $request->poste;
-        $enseignant_grade->annee_id = Annee::where("open", 1)->get()->first()->id;
-        $enseignant_grade->vol_hor_tot = 0;
-        $enseignant_grade->save();
-        $specs = json_decode($request->specialite, true);
+        $specs = $uEs = [];
 
-        foreach($specs as $spec){
-            $enseignant_specialite = new EnseignantSpecialite();
-            $enseignant_specialite->enseignant_id = $enseignant->id;
-            $enseignant_specialite->specialite_id = $spec['specialiteId'];
-            $enseignant_specialite->annee_id = Annee::where("open", 1)->get()->first()->id;
-            $enseignant_specialite->save();
+        $specialites = json_decode($request->specialiteData, true) ?? [];
+        $ues = json_decode($request->ueData, true) ?? [];
+
+        if ($specialites) {
+            $specCodes = array_map(fn($item) => strstr($item['specialiteId'], ' - ', true), $specialites);
+            $specs = Specialite::whereIn('code', $specCodes)->pluck('id')->toArray();
         }
 
-        return redirect()->route('enseignants.ues', $enseignant->id);
+        if ($ues) {
+            $ueCodes = array_map(fn($item) => strstr($item['ueId'], ' - ', true), $ues);
+            $uEs = UE::whereIn('code', $ueCodes)->pluck('id')->toArray();
+        }
+
+        $vol_grade = Grade::find($request->fonction)->volume_horaire;
+        if ($request->poste != 0) {
+            $poste = Poste::find($request->poste);
+            $cat_poste = $poste->categorie_poste_id;
+            $exoneration = CategoriePoste::find($cat_poste)->exoneration_horaire;
+            $vol_grade -= $exoneration;
+        }
+
+        DB::transaction(function() use ($request, $specs, $uEs, $vol_grade) {
+
+            $enseignant = Enseignant::create([
+                'matricule' => $request->matricule,
+                'nom' => $request->nom,
+                'prenoms' => $request->prenoms,
+                'email' => $request->email,
+                'grade_id' => $request->fonction,
+                'poste_id' => $request->poste,
+                'type_piece_id' => $request->type_piece,
+            ]);
+
+            EnseignantGrade::create([
+                'grade_id' => $request->fonction,
+                'enseignant_id' => $enseignant->id,
+                'poste_id' => $request->poste,
+                'annee_id' => Annee::where('open', 1)->first()->id,
+                'vol_hor_tot' => $vol_grade,
+            ]);
+
+            foreach ($specs as $spec) {
+                EnseignantSpecialite::create([
+                    'enseignant_id' => $enseignant->id,
+                    'specialite_id' => $spec,
+                    'annee_id' => Annee::where('open', 1)->first()->id,
+                ]);
+            }
+
+            foreach ($uEs as $ue) {
+                EnseignantUE::create([
+                    'enseignant_id' => $enseignant->id,
+                    'ue_id' => $ue,
+                    'annee_id' => Annee::where('open', 1)->first()->id,
+                    'date_affectation' => now(),
+                    'nb_hr_cpt' => 0,
+                ]);
+            }
+        });
+
+        return redirect()->route('enseignants.index');
     }
 
     public function ues_enseignant(int $id){

@@ -27,7 +27,7 @@ class Enseignant extends Model
     {
         $grade = Grade::find($this->grade_id);
         if($grade != Null)
-            return $grade->libelle;
+            return $grade->intitule;
         else
             return "";
     }

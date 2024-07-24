@@ -33,21 +33,25 @@
                         <form action="{{ route('ues.store') }}" method="POST">
                             @csrf
                             <div class="row">
-                                <div class="col col-md-6">
-                                    <div class="mt-4">
+                                <div class="col col-md-12">
+                                    <div class="">
                                         <label for="code">Code</label>
                                         <input type="text" class="form-control" name="code" placeholder="Entrez le code"
                                                required>
                                     </div>
                                 </div>
-                                <div class="col col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-12">
                                     <div class="mt-4">
                                         <label for="code">Intitulé</label>
                                         <input type="text" class="form-control" name="intitule" placeholder="Entrez l'intitulé"
                                                required>
                                     </div>
                                 </div>
-                                <div class="col col-md-6">
+                            </div>
+                            <div class="row">
+                                <div class="col col-md-12">
                                     <div class="mt-4">
                                         <label for="volume_horaire">Volume horaire</label>
                                         <input type="text" class="form-control" name="volume_horaire" placeholder="Entrez le volume horaire"
@@ -92,18 +96,12 @@
                                             <tr>
                                                 <th class="text-left">N°</th>
                                                 <th class="text-left">Code</th>
-                                                <th class="text-left">intitulé</th>
+                                                <th class="text-left">Intitulé</th>
                                                 <th class="text-left">Volume horaire</th>
                                                 <th class="text-left">Action</th>
                                             </tr>
                                             </thead>
                                             <tbody>
-                                            @if (count($ues) < 1)
-                                                <tr>
-                                                    <td colspan="8" class="text-center">Aucune unité d'enseignement enregistré
-                                                        pour le moment</td>
-                                                </tr>
-                                            @endif
                                             @foreach ($ues as $ue)
                                                 <tr>
                                                     <td class="text-left">{{ $loop->index + 1 }}</td>

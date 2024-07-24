@@ -2,10 +2,10 @@
     <div class="sidebar-content js-simplebar">
         <a class="sidebar-brand text-center">
             <h2 class="align-middle text-white" style="font-weight: 700; font-size: 26px">UNI-CHECK </h2>
-            <p style="font-size: 12px; color: grey;">{{ session()->get('on_year'); }}</p>
+            <p style="font-size: 12px; color: grey;">{{ session()->get('on_year') }}</p>
         </a>
 
-        <h4 class="text-center" style="color: darkgrey; font-size: 14px; margin-top: -15px; margin-bottom: 10px;">{{ session()->get('uni_name'); }}</h4>
+        <h4 class="text-center" style="color: darkgrey; font-size: 14px; margin-top: -15px; margin-bottom: 10px;">{{ session()->get('uni_name') }}</h4>
 
         <ul class="sidebar-nav">
             <li class="sidebar-header">
@@ -53,7 +53,7 @@
                 <a class="sidebar-link" href="{{ route('postes.index') }}">
                     <i class="align-middle fa fa-briefcase"></i> <span class="align-middle">Postes</span>
                 </a>
-            </li>*
+            </li>
 
             <li class="sidebar-item @if(Request::route()->getName() == 'scanners.index') active @endif">
                 <a class="sidebar-link" href="{{ route('scanners.index') }}">

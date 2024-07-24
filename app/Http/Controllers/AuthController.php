@@ -35,8 +35,8 @@ class AuthController extends Controller
         $user = Auth::user();
         $universites = Universite::all();
         $years = Annee::all();
-        $academic = Session::put('academic');
-        $university = Session::put('university');
+        $academic = Session::get('academic');
+        $university = Session::get('university');
         return view('users.params', compact('user', 'universites', 'years', 'academic', 'university'));
     }
 

@@ -63,6 +63,7 @@ Route::resource('ues', UEController::class);
 Route::resource('universites', UniversiteController::class);
 Route::resource('scanners', ScannerController::class);
 
+Route::get('/ue/{spec}', [UEController::class, 'find_by_spec'])->name('ue.find_by_spec');
 Route::get('/enseignant/choose', [SeanceController::class, 'choose_enseignant'])->name('seance.choose');
 Route::get('/enseignant/choose/{id}', [SeanceController::class, 'choice'])->name('seance.choice');
 Route::get('/filieres/get/{id}', [SeanceController::class, 'getFilieres'])->name('seance.filiere');

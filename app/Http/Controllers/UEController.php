@@ -2,13 +2,19 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Annee;
 use Illuminate\Http\Request;
 use App\Models\UE;
 use App\Models\Universite;
 use Exception;
+use Illuminate\Support\Facades\Session;
 
 class UEController extends Controller
 {
+    public function find_by_spec($spec){
+        $ue = UE::where('spec_id', '=', $spec)->get();
+        return $ue;
+    }
     public function __construct(){
         $this->middleware("auth");
     }
@@ -26,11 +32,11 @@ class UEController extends Controller
      */
     public function store(Request $request)
     {
+
         try{
             $ue = new UE();
-            $ue->universite_id = $request->universite_id;
+            $ue->universite_id = Session::get('uni_id');;
             $ue->intitule = $request->intitule;
-            $ue->description = $request->description;
             $ue->code = $request->code;
             $ue->volume_horaire = $request->volume_horaire;
             $ue->save();
