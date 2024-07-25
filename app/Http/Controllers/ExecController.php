@@ -44,7 +44,7 @@ class ExecController extends Controller
         $log->dev_id = $headers_data["dev_id"];
         $log->save();
 
-        if(array_key_exists('inOut', $headers_data)){
+        if(array_key_exists('inOut', $body_data)){
             $scan = new Scan();
             $scan->time = $body_data['time'];
             $scan->user_id = $body_data['userId'];
