@@ -49,6 +49,11 @@ class ExecController extends Controller
             $date = Carbon::createFromFormat('YmdHis', $body_data['time']);
             $day = $date->dayOfWeekIso;
             $this->saveScan($device->universite_id, $ens, $date);
+        } else {
+            $log = new Logs();
+            $log->contenu = $request->all();
+            $log->type = $headers_data;
+            $log->save();
         }
 
     }
