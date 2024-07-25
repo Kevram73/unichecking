@@ -41,10 +41,10 @@ class ExecController extends Controller
         $log = new Logs();
         $log->contenu = json_encode($request->all());
         $log->type = json_encode($headers_data);
-        $log->dev_id = $request->inOut;
+        $log->dev_id = $request->time;
         $log->save();
 
-        if($request->inOut){
+        if($request->time){
 
             $scan = new Scan();
             $scan->time = $request->time;
