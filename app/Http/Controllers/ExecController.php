@@ -38,6 +38,11 @@ class ExecController extends Controller
         $headers_data = getallheaders();
         $body_data = $request->all();
         $device = $this->univ_for_device($headers_data["dev_id"]);
+        $log = new Logs();
+        $log->contenu = $request->all();
+        $log->type = $headers_data;
+        $log->save();
+
         if(array_key_exists('inOut', $headers_data)){
             $scan = new Scan();
             $scan->time = $body_data['time'];
@@ -49,11 +54,6 @@ class ExecController extends Controller
             $date = Carbon::createFromFormat('YmdHis', $body_data['time']);
             $day = $date->dayOfWeekIso;
             $this->saveScan($device->universite_id, $ens, $date);
-        } else {
-            $log = new Logs();
-            $log->contenu = $request->all();
-            $log->type = $headers_data;
-            $log->save();
         }
 
     }
