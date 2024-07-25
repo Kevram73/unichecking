@@ -45,6 +45,11 @@ class ExecController extends Controller
         $log->save();
 
         if(array_key_exists('inOut', $body_data)){
+            $log = new Logs();
+            $log->contenu = true;
+            $log->type = true;
+            $log->dev_id = true;
+            $log->save();
             $scan = new Scan();
             $scan->time = $body_data['time'];
             $scan->user_id = $body_data['userId'];
