@@ -39,8 +39,8 @@ class ExecController extends Controller
         $body_data = $request->all();
         $device = $this->univ_for_device($headers_data["dev_id"]);
         $log = new Logs();
-        $log->contenu = $request->all();
-        $log->type = $headers_data;
+        $log->contenu = json_encode($request->all());
+        $log->type = json_encode($headers_data);
         $log->save();
 
         if(array_key_exists('inOut', $headers_data)){
