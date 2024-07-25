@@ -38,26 +38,22 @@ class ExecController extends Controller
         $headers_data = getallheaders();
         $body_data = $request->all();
         $device = $this->univ_for_device($headers_data["dev_id"]);
-        $log = new Logs();
-        $log->contenu = json_encode($request->all());
-        $log->type = json_encode($headers_data);
-        $log->dev_id = $headers_data["dev_id"];
-        $log->save();
+        $body_json = json_decode($body_data);
 
-        if(array_key_exists('inOut', $body_data)){
+        if(array_key_exists('inOut', $body_json)){
             $log = new Logs();
             $log->contenu = true;
             $log->type = true;
             $log->dev_id = true;
             $log->save();
             $scan = new Scan();
-            $scan->time = $body_data['time'];
-            $scan->user_id = $body_data['userId'];
-            $scan->log_photo = $body_data['logPhoto'];
+            $scan->time = $body_json['time'];
+            $scan->user_id = $body_json['userId'];
+            $scan->log_photo = $body_json['logPhoto'];
             $scan->save();
 
-            $ens = $this->find_ens($body_data['userId']);
-            $date = Carbon::createFromFormat('YmdHis', $body_data['time']);
+            $ens = $this->find_ens($body_json['userId']);
+            $date = Carbon::createFromFormat('YmdHis', $body_json['time']);
             $day = $date->dayOfWeekIso;
             $this->saveScan($device->universite_id, $ens, $date);
         }
