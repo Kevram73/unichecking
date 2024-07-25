@@ -38,11 +38,20 @@ class SeanceController extends Controller
         return view('seances.choose_enseignant', compact('enseignants'));
     }
 
-    public function choice(Request $request, $id){
-        $enseignant = Enseignant::find($id);
+    public function create(Request $request){
+        $enseignants = Enseignant::all();
         $facultes = Faculte::all();
+        return view('seances.create', compact('enseignants', 'facultes'));
+    }
+
+    public function get_ues($id){
         $ues = EnseignantUE::where('enseignant_id', $id)->get();
-        return view('seances.create', compact('enseignant', 'facultes', 'ues'));
+        $ue_list = array();
+        foreach($ues as $ue){
+            $ueItem = UE::find($ue->ue_id);
+            array_push($ue_list, $ueItem);
+        }
+        return  response()->json(['data' => $ue_list]);
     }
 
     public function getFilieres($id)
@@ -56,13 +65,14 @@ class SeanceController extends Controller
      */
     public function store(Request $request)
     {
+        $ens_ue = EnseignantUE::where('enseignant_id', $request->ens_id)->where('ue_id', $request->ue)->get()->first();
         $ids = explode(',', $request->ue[0]);
         $seance = new Seance();
         $seance->annee_id = Annee::where('open', 1)->get()->first()->id;
         $seance->universite_id = Session::get("uni_id");
         $seance->enseignant_id = $request->ens_id;
-        $seance->enseignant_ue_id = $ids[0];  // Assign the first part as enseignant_ue_id
-        $seance->ue_id = $ids[1];
+        $seance->enseignant_ue_id = $ens_ue->id;
+        $seance->ue_id = $request->ue;
         $seance->jour_semaine = $request->jour_semaine;
         $seance->heure_debut = $request->heure_debut;
         $seance->heure_fin = $request->heure_fin;
@@ -76,7 +86,7 @@ class SeanceController extends Controller
             $seance_ue = new SeanceUE();
             $seance_ue->faculte_id = $elt['faculteId'];        // Use array access syntax
             $seance_ue->filiere_id = $elt['filiereId'];        // Use array access syntax
-            $seance_ue->ue_id = $ids[1];                       // Assuming $ids is defined earlier correctly
+            $seance_ue->ue_id = $request->ue;                       // Assuming $ids is defined earlier correctly
             $seance_ue->seance_id = $seance->id;               // Assuming $seance->id is defined earlier
             $seance_ue->semestre = $elt['semester'];           // Use array access syntax
             $seance_ue->save();

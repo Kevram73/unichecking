@@ -19,7 +19,7 @@
                     <h1 class="h3 mb-3">Séances</h1>
                 </div>
                 <div class="col d-flex justify-content-end">
-                    <a href="{{ route('seance.choose') }}" class="btn btn-primary" >
+                    <a href="{{ route('seances.create') }}" class="btn btn-primary" >
                         <i class="fa fa-plus"></i> Ajouter
                     </a>
                 </div>

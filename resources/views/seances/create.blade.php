@@ -16,7 +16,6 @@
 
             <div class="mb-3">
                 <h1 class="h3 d-inline align-middle">Enregistrement d'une séance</h1>
-
             </div>
             <form action="{{ route('seances.store') }}" method="POST">
                 @csrf
@@ -27,20 +26,21 @@
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="nom">Nom et prénoms</label>
-                                        <input type="text" class="form-control" value="{{ $enseignant->nom }} {{ $enseignant->prenoms }}" name="nom" readonly>
-                                        <input type="hidden" name="ens_id" value="{{ $enseignant->id }}" >
+                                        <div class="input-group">
+                                            <input list="ens-list" id="ens_name" class="form-control">
+                                            <input type="hidden" id="ens_id" name="ens_id">
+                                            <datalist id="ens-list">
+                                                @foreach ($enseignants as $ens)
+                                                    <option value="{{ $ens->nom }} {{ $ens->prenoms }}" data-id="{{ $ens->id }}"></option>
+                                                @endforeach
+                                            </datalist>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="col-md-6">
                                     <div class="card-body">
                                         <label for="ue">Unité d'enseignement</label>
-                                        <select name="ue[]" id="ue" class="form-control" required>
-
-                                            @foreach ($ues as $ue)
-                                                <option value="{{ $ue->id }},{{ $ue->ue()->id }}">{{ $ue->ue()->intitule }}</option>
-                                            @endforeach
-
-
+                                        <select name="ue" id="ue" class="form-control" required>
                                         </select>
                                     </div>
                                 </div>
@@ -61,7 +61,6 @@
                                         </select>
                                     </div>
                                 </div>
-
                             </div>
 
                             <div class="row">
@@ -96,56 +95,52 @@
                             <div class="row">
                                 <div class="col-md-12">
                                     <div class="card-body">
-                                        <table class="table mb-0">
+                                        <table class="table mb=0">
                                             <thead>
-                                                <tr>
-                                                    <td class="text-left">Faculté</td>
-                                                    <td class="text-center">Filière</td>
-                                                    <td class="text-center">Semestre</td>
-                                                    <td class="text-center"><button class="btn btn-success" id="show-add-modal" type="button">Ajouter</button></td>
-                                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
-                                                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                                            <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
-                                                            <button class="btn btn-danger" id="close-add-modal" type="button"><i class="fa fa-close"></i></button>
+                                            <tr>
+                                                <td class="text-left">Faculté</td>
+                                                <td class="text-center">Filière</td>
+                                                <td class="text-center">Semestre</td>
+                                                <td class="text-center"><button class="btn btn-success" id="show-add-modal" type="button">Ajouter</button></td>
+                                                <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="add-modal">
+                                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                                        <h4 class="h4" style="padding-top: 8px;">Ajouter une filière</h4>
+                                                        <button class="btn btn-danger" id="close-add-modal" type="button"><i class="fa fa-close"></i></button>
+                                                    </div>
+
+                                                    <hr />
+                                                    <form action="{{ route('filieres.store') }}" method="POST">
+                                                        @csrf
+                                                        <div class="mt-4">
+                                                            <label for="code">Faculté</label>
+                                                            <select name="faculte" id="faculte" class="form-control">
+                                                                @foreach($facultes as $faculte)
+                                                                    <option value="{{ $faculte->id }}">{{ $faculte->libelle  }}</option>
+                                                                @endforeach
+                                                            </select>
                                                         </div>
-
-                                                        <hr />
-                                                        <form action="{{ route('filieres.store') }}" method="POST">
-                                                            @csrf
-                                                            <div class="mt-4">
-                                                                <label for="code">Faculté</label>
-                                                                <select name="faculte" id="faculte" class="form-control">
-                                                                    @foreach($facultes as $faculte)
-                                                                        <option value="{{ $faculte->id }}">{{ $faculte->libelle  }}</option>
-                                                                    @endforeach
-                                                                </select>
-
-                                                            </div>
-                                                            <div class="mt-4">
-                                                                <label for="code">Filière</label>
-                                                                <select name="filiere" id="filiere" class="form-control">
-
-                                                                </select>
-                                                            </div>
-                                                            <div class="mt-4">
-                                                                <label for="code">Semestre</label>
-                                                                <input type="number" class="form-control" name="semester" placeholder="Semestre" min="1" max="10"
-                                                                       required>
-                                                            </div>
-                                                            <div class="mt-4">
-                                                                <button class="btn btn-success" type="button" id="add_semester">Enregistrer</button>
-                                                            </div>
-                                                        </form>
-
-                                                    </dialog>
-                                                </tr>
+                                                        <div class="mt-4">
+                                                            <label for="code">Filière</label>
+                                                            <select name="filiere" id="filiere" class="form-control">
+                                                            </select>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <label for="code">Semestre</label>
+                                                            <input type="number" class="form-control" name="semester" placeholder="Semestre" min="1" max="10" required>
+                                                        </div>
+                                                        <div class="mt-4">
+                                                            <button class="btn btn-success" type="button" id="add_semester">Enregistrer</button>
+                                                        </div>
+                                                    </form>
+                                                </dialog>
+                                            </tr>
                                             </thead>
                                             <tbody>
-                                                <tr>
-                                                    <td class="text-center" colspan="4">
-                                                        Aucune filière sélectionnée
-                                                    </td>
-                                                </tr>
+                                            <tr>
+                                                <td class="text-center" colspan="4">
+                                                    Aucune filière sélectionnée
+                                                </td>
+                                            </tr>
                                             </tbody>
                                         </table>
                                     </div>
@@ -157,16 +152,12 @@
                                     <div class="card-body">
                                         <button type="submit" class="btn btn-primary">Enregistrer</button>
                                     </div>
-
                                 </div>
-
                             </div>
                         </div>
                     </div>
                 </div>
             </form>
-
-
         </div>
     </main>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
@@ -206,35 +197,35 @@
                 tbody.innerHTML = '';
                 dataList.forEach((data, index) => {
                     const newRow = `<tr>
-                                <td class="text-left">${data.faculte}</td>
-                                <td class="text-center">${data.filiere}</td>
-                                <td class="text-center">${data.semester}</td>
-                                <td class="text-center">
-                                    <button class="btn btn-sm btn-primary" onclick="showEditModal(${data.faculte_id})"><i class="fa fa-edit"></i></button>
-                                    <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="modal-${data.faculte_id}">
-                                        <div style="display: flex; flex-direction: row; justify-content: space-between;">
-                                            <h4 class="h4" style="padding-top: 8px;">Editer votre choix</h4>
-                                            <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
+                            <td class="text-left">${data.faculte}</td>
+                            <td class="text-center">${data.filiere}</td>
+                            <td class="text-center">${data.semester}</td>
+                            <td class="text-center">
+                                <button class="btn btn-sm btn-primary" onclick="showEditModal(${data.faculte_id})"><i class="fa fa-edit"></i></button>
+                                <dialog style="border: 2px solid white; border-radius: 4px; width: 520px" id="modal-${data.faculte_id}">
+                                    <div style="display: flex; flex-direction: row; justify-content: space-between;">
+                                        <h4 class="h4" style="padding-top: 8px;">Editer votre choix</h4>
+                                        <button class="btn btn-danger" id="close-add-modal"><i class="fa fa-close"></i></button>
+                                    </div>
+                                    <hr/>
+                                    <form method="POST">
+                                        @csrf
+                    <div class="mt-4">
+                        <label for="code">Code</label>
+                        <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>
                                         </div>
-                                        <hr/>
-                                        <form method="POST">
-                                            @csrf
-                                            <div class="mt-4">
-                                                <label for="code">Code</label>
-                                                <input type="text" class="form-control" name="code" placeholder="Code" value="${data.faculte}" readonly required>
-                                            </div>
-                                            <div class="mt-4">
-                                                <label for="code">Intitulé</label>
-                                                <input type="number" class="form-control" name="semester" placeholder="" value="${data.semester}" required>
-                                            </div>
-                                            <div class="mt-4">
-                                                <button class="btn btn-success" type="submit">Modifier</button>
-                                            </div>
-                                        </form>
-                                    </dialog>
-                                    <button class="btn btn-sm btn-danger" data-index="${index}" onclick="deleteEntry(this)"><i class="fa fa-trash"></i></button>
-                                </td>
-                            </tr>`;
+                                        <div class="mt-4">
+                                            <label for="code">Intitulé</label>
+                                            <input type="number" class="form-control" name="semester" placeholder="" value="${data.semester}" required>
+                                        </div>
+                                        <div class="mt-4">
+                                            <button class="btn btn-success" type="submit">Modifier</button>
+                                        </div>
+                                    </form>
+                                </dialog>
+                                <button class="btn btn-sm btn-danger" data-index="${index}" onclick="deleteEntry(this)"><i class="fa fa-trash"></i></button>
+                            </td>
+                        </tr>`;
                     tbody.innerHTML += newRow;
                 });
             }
@@ -251,8 +242,6 @@
             updateTable(); // Mettre à jour le tableau au chargement initial
         });
     </script>
-
-
     <script>
         $(document).ready(function(){
             $('#faculte').change(function() {
@@ -274,10 +263,32 @@
                     $('#filiere').empty(); // Vide la liste si aucune faculté n'est sélectionnée
                 }
             });
+
+            $('#ens_name').on('input', function() {
+                var selectedOption = $('#ens-list option').filter(function() {
+                    return this.value === $('#ens_name').val();
+                });
+                var enseignantId = selectedOption.data('id');
+                $('#ens_id').val(enseignantId);
+                if (enseignantId) {
+                    $.ajax({
+                        url: '/seances/ues/' + enseignantId,
+                        type: "GET",
+                        success: function(data) {
+                            $('#ue').empty();
+                            console.log(data["data"])
+                            $.each(data["data"], function(key, value) {
+                                $('#ue').append('<option value="'+ value['id'] +'">'+ value['intitule'] +'</option>');
+                            });
+                        }
+                    });
+                } else {
+                    $('#ue').empty();
+                }
+            });
         });
     </script>
     <script>
-
         function closeEditModal(id){
             const dialog = document.querySelector(`#modal-${id}`);
             dialog.close();
@@ -287,7 +298,6 @@
             const dialog = document.querySelector(`#modal-${id}`);
             dialog.showModal();
         }
-
     </script>
 
 @endsection

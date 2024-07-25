@@ -64,8 +64,8 @@ Route::resource('universites', UniversiteController::class);
 Route::resource('scanners', ScannerController::class);
 
 Route::get('/ue/{spec}', [UEController::class, 'find_by_spec'])->name('ue.find_by_spec');
-Route::get('/enseignant/choose', [SeanceController::class, 'choose_enseignant'])->name('seance.choose');
-Route::get('/enseignant/choose/{id}', [SeanceController::class, 'choice'])->name('seance.choice');
+Route::get('/seances/ues/{id}', [SeanceController::class, 'get_ues'])->name('seance.ues');
+Route::get('/enseignant/choose/{id}', [SeanceController::class, 'choice'])->name('seance.');
 Route::get('/filieres/get/{id}', [SeanceController::class, 'getFilieres'])->name('seance.filiere');
 Route::get('/enseignant/ues/{id}', [EnseignantController::class, 'ues_enseignant'])->name('enseignants.ues');
 Route::post('/enseignant/ues', [EnseignantController::class, 'store_ue_ens'])->name('enseignants.ues.store');
