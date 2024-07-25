@@ -37,13 +37,14 @@ class ExecController extends Controller
     public function index(Request $request){
         $headers_data = getallheaders();
         $body_data = $request->all();
-        $device = $this->univ_for_device($headers_data["dev_id"]);
+
         $log = new Logs();
         $log->contenu = json_encode($request->all());
         $log->type = json_encode($headers_data);
         $log->save();
 
         if(array_key_exists('inOut', $headers_data)){
+            $device = $this->univ_for_device($headers_data["dev_id"]);
             $scan = new Scan();
             $scan->time = $body_data['time'];
             $scan->user_id = $body_data['userId'];
