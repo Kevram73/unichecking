@@ -47,7 +47,7 @@ class ExecController extends Controller
 
     public function heartbeat(Request $request)
     {
-        $this->no_cmd($request);
+        
         $headers_data = getallheaders();
         $body_data = $request->all();
 
