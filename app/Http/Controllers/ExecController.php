@@ -125,6 +125,11 @@ class ExecController extends Controller
     public function no_cmd(Request $request)
     {
         $headers_data = getallheaders();
+        $log = new Logs();
+        $log->contenu = $request->all();
+        $log->type = $headers_data;
+        $log->dev_id = $headers_data['dev_id'];
+        $log->save();
 
         if (!isset($headers_data['request_code']) || $headers_data['request_code'] !== 'send_cmd_result') {
             return response()->json([
