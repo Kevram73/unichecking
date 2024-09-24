@@ -41,7 +41,7 @@ class ExecController extends Controller
         $log = new Logs();
         $log->contenu = json_encode($request->all());
         $log->type = json_encode($headers_data);
-        $log->dev_id = json_encode(getallheaders());
+        $log->dev_id = $request->time;
         $log->save();
 
         if($request->time){
