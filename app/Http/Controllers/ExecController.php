@@ -29,6 +29,20 @@ class ExecController extends Controller
         ];
     }
 
+    public function handleDeviceRequest(Request $request)
+    {
+        $command = $request->get('command');
+        
+        switch ($command) {
+            case 'heartbeat':
+                return $this->heartbeat($request);
+            case 'send_cmd_result':
+                return $this->send_cmd_result($request);
+            default:
+                return response()->json(['error' => 'Invalid command'], 400);
+        }
+    }
+
     public function heartbeat(Request $request)
     {
         $headers_data = getallheaders();
