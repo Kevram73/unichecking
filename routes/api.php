@@ -9,7 +9,7 @@ use App\Http\Controllers\CallbackController;
 use App\Http\Controllers\ExecController;
 
 
-Route::post('/', [ExecController::class, 'handleDeviceRequest'])->name('handleDeviceRequest');
+Route::post('/', [ExecController::class, 'hearbeat'])->name('hearbeat');
 Route::post('/log/check_enseignant/{id}', [CallbackController::class, 'check_enseignant']);
 Route::get('/log/check_enseignant/{id}', [CallbackController::class, 'check_enseignant']);
 
