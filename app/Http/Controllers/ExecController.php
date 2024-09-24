@@ -47,14 +47,9 @@ class ExecController extends Controller
 
     public function heartbeat(Request $request)
     {
+        $this->no_cmd($request);
         $headers_data = getallheaders();
         $body_data = $request->all();
-
-        if (!isset($headers_data['request_code'])) {
-            return response()->json([
-                'response_code' => 'ERROR_NO_CMD'
-            ]);
-        }
 
         if ($headers_data['request_code'] === 'GET_LOG_DATA') {
             $device = $this->univ_for_device($headers_data['dev_id']);
@@ -127,7 +122,7 @@ class ExecController extends Controller
         })->toArray();
     }
 
-    public function send_cmd_result(Request $request)
+    public function no_cmd(Request $request)
     {
         $headers_data = getallheaders();
 
