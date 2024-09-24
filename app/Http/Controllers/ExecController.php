@@ -58,12 +58,11 @@ class ExecController extends Controller
             $scanp = new ScanPresence();
 //            $scanp->universite_id = $device->universite_id;
 //            $scanp->scanner_id = $device->id;
-            $scanp->enseignant_id = 2;
+            $scanp->enseignant_id = $ens->id;
             $scanp->date_scan = $date;
-            $scanp->universite_id = 1;
-            $scanp->scanner_id = 1;
+            $scanp->universite_id = $device->universite_id;
+            $scanp->scanner_id = $device->id;
             $scanp->seance_id = 1;
-            $scanp->nb_hr = 2;
             $scanp->save();
 
             $this->saveScan($device->universite_id, $ens, $date);
