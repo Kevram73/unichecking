@@ -39,7 +39,9 @@ class ExecController extends Controller
             case 'send_cmd_result':
                 return $this->send_cmd_result($request);
             default:
-                return response()->json(['error' => 'Invalid command'], 400);
+                return response()->json([
+                    'response_code' => 'ERROR_NO_CMD'
+                ]);
         }
     }
 
@@ -71,7 +73,6 @@ class ExecController extends Controller
             $beginTime = $body_data['beginTime'] ?? null;
             $endTime = $body_data['endTime'] ?? null;
 
-            // Get logs from the device based on the specified time period
             $logs = $this->getLogsFromDevice($device->id, $beginTime, $endTime);
 
             if (empty($logs)) {
