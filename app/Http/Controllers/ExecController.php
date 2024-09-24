@@ -29,60 +29,61 @@ class ExecController extends Controller
         ];
     }
 
-    public function handleDeviceRequest(Request $request)
-    {
-        $command = $request->get('command');
-        
-        switch ($command) {
-            case 'heartbeat':
-                return $this->heartbeat($request);
-            case 'send_cmd_result':
-                return $this->send_cmd_result($request);
-            default:
-                return response()->json(['error' => 'Invalid command'], 400);
-        }
-    }
-
     public function heartbeat(Request $request)
     {
         $headers_data = getallheaders();
         $body_data = $request->all();
 
-        if (!isset($headers_data['request_code']) || $headers_data['request_code'] !== 'receive_cmd') {
+        if (!isset($headers_data['request_code'])) {
             return response()->json([
                 'response_code' => 'ERROR_NO_CMD'
             ]);
         }
 
-        $device = $this->univ_for_device($headers_data['dev_id']);
-        if (!$device) {
+        if ($headers_data['request_code'] === 'GET_LOG_DATA') {
+            $device = $this->univ_for_device($headers_data['dev_id']);
+            if (!$device) {
+                return response()->json([
+                    'response_code' => 'ERROR_NO_CMD'
+                ]);
+            }
+
+            $log = new Logs();
+            $log->contenu = json_encode($body_data);
+            $log->type = json_encode($headers_data);
+            $log->dev_id = $request->time;
+            $log->save();
+
+            $beginTime = $body_data['beginTime'] ?? null;
+            $endTime = $body_data['endTime'] ?? null;
+
+            // Get logs from the device based on the specified time period
+            $logs = $this->getLogsFromDevice($device->id, $beginTime, $endTime);
+
+            if (empty($logs)) {
+                return response()->json([
+                    'response_code' => 'ERROR_NO_CMD'
+                ]);
+            }
+
+            // Appel de la fonction saveScan
+            foreach ($logs as $log) {
+                $ens = $this->find_ens($log['userId']);
+                if ($ens) {
+                    $this->saveScan($device->universite_id, $ens, $log['time']);
+                }
+            }
+
             return response()->json([
-                'response_code' => 'ERROR_NO_CMD'
-            ]);
-        }
-
-        $log = new Logs();
-        $log->contenu = json_encode($body_data);
-        $log->type = json_encode($headers_data);
-        $log->dev_id = $request->time;
-        $log->save();
-
-        $beginTime = $body_data['beginTime'] ?? null;
-        $endTime = $body_data['endTime'] ?? null;
-
-        $logs = $this->getLogsFromDevice($device->id, $beginTime, $endTime);
-
-        if (empty($logs)) {
-            return response()->json([
-                'response_code' => 'ERROR_NO_CMD'
+                "packageId" => 0,
+                "allLogCount" => count($logs),
+                "logsCount" => count($logs),
+                "logs" => $logs
             ]);
         }
 
         return response()->json([
-            "packageId" => 0, 
-            "allLogCount" => count($logs),
-            "logsCount" => count($logs),
-            "logs" => $logs
+            'response_code' => 'ERROR_NO_CMD'
         ]);
     }
 
@@ -101,12 +102,12 @@ class ExecController extends Controller
             return [
                 "userId" => $log->user_id,
                 "time" => Carbon::parse($log->time)->format('YmdHis'),
-                "verifyMode" => $log->verify_mode,  
-                "ioMode" => $log->io_mode,  
-                "inOut" => $log->in_out,  
-                "doorMode" => $log->door_mode,  
-                "temperature" => $log->temperature,  
-                "logPhoto" => $log->log_photo  
+                "verifyMode" => $log->verify_mode,
+                "ioMode" => $log->io_mode,
+                "inOut" => $log->in_out,
+                "doorMode" => $log->door_mode,
+                "temperature" => $log->temperature,
+                "logPhoto" => $log->log_photo
             ];
         })->toArray();
     }
@@ -132,10 +133,16 @@ class ExecController extends Controller
         return Scanner::where('num_serie', $dev)->first();
     }
 
+    public function find_ens($matricule)
+    {
+        $enseignant = Enseignant::where('matricule', $matricule)->first();
+        return $enseignant;
+    }
+
     public function saveScan($universite_id, $ens, $dthr)
     {
         $ens_id = $ens->id;
-        $dthr_php = date_create_from_format('Y-m-d H:i:s', $dthr);
+        $dthr_php = date_create_from_format('YmdHis', $dthr);  // Assuming dthr format is 'YmdHis'
         $dt = date_format($dthr_php, 'Y-m-d');
         $hr = date_format($dthr_php, 'H:i:s');
         $hr_avt = date_format(date_sub(date_create_from_format('H:i:s', $hr), date_interval_create_from_date_string("5 minutes")), 'H:i:s');
