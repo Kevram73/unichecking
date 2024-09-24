@@ -51,7 +51,7 @@ class ExecController extends Controller
         $headers_data = getallheaders();
         $body_data = $request->all();
 
-        if ($headers_data['request_code'] === 'GET_LOG_DATA') {
+        if ($headers_data['request_code'] === 'realtime_glog') {
             $device = $this->univ_for_device($headers_data['dev_id']);
             if (!$device) {
                 return response()->json([
