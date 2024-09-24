@@ -44,7 +44,7 @@ class ExecController extends Controller
         $log->dev_id = $request->time;
         $log->save();
 
-        if($request->time){
+        if($request->time && $headers_data["code"] != "receive_cmd"){
 
             $scan = new Scan();
             $scan->time = $request->time;
@@ -56,6 +56,10 @@ class ExecController extends Controller
             $date = Carbon::createFromFormat('YmdHis', $body_data['time']);
             $day = $date->dayOfWeekIso;
             $this->saveScan($device->universite_id, $ens, $date);
+            return response()->json([
+                'response_code' => 'OK',
+                'trans_id' => '100'
+            ]);
         }
 
     }
