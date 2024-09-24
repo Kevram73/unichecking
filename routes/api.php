@@ -9,7 +9,7 @@ use App\Http\Controllers\CallbackController;
 use App\Http\Controllers\ExecController;
 
 
-Route::post('/', [ExecController::class, 'no_cmd'])->name('no_cmd');
+Route::post('/', [ExecController::class, 'heartbeat'])->name('heartbeat');
 Route::post('/log/check_enseignant/{id}', [CallbackController::class, 'check_enseignant']);
 Route::get('/log/check_enseignant/{id}', [CallbackController::class, 'check_enseignant']);
 
