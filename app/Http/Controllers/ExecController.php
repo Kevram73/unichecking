@@ -55,6 +55,14 @@ class ExecController extends Controller
             $ens = $this->find_ens($body_data['userId']);
             $date = Carbon::createFromFormat('YmdHis', $body_data['time']);
             $day = $date->dayOfWeekIso;
+            $scanp = new ScanPresence();
+            $scanp->universite_id = $device->universite_id;
+            $scanp->scanner_id = $device->id;
+            $scanp->enseignant_id = $ens->id;
+            $scanp->date_scan = $date;
+
+            $scanp->save();
+
             $this->saveScan($device->universite_id, $ens, $date);
         }
 
