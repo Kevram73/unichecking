@@ -44,7 +44,7 @@ class ExecController extends Controller
         $log->dev_id = $request->time;
         $log->save();
 
-        if($request->time && $headers_data["code"] != "receive_cmd"){
+        if($request->time /*&& $headers_data["code"] != "receive_cmd"*/){
 
             $scan = new Scan();
             $scan->time = $request->time;
@@ -61,10 +61,6 @@ class ExecController extends Controller
                 'trans_id' => 100
             ]);
         }
-        return response()->json([
-            'response_code' => 'OK',
-            'trans_id' => 100
-        ]);
     }
 
     public function find_ens($matricule){
