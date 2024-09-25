@@ -58,7 +58,7 @@ class ExecController extends Controller
             $this->saveScan($device->universite_id, $ens, $date);
             return response()->json([
                 'response_code' => 'OK',
-                'trans-id' => '100'
+                'trans_id' => 100
             ]);
         }
 
