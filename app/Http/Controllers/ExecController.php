@@ -61,7 +61,10 @@ class ExecController extends Controller
                 'trans_id' => 100
             ]);
         }
-
+        return response()->json([
+            'response_code' => 'OK',
+            'trans_id' => 100
+        ]);
     }
 
     public function find_ens($matricule){
