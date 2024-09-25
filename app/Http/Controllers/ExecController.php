@@ -57,7 +57,7 @@ class ExecController extends Controller
             $day = $date->dayOfWeekIso;
             $this->saveScan($device->universite_id, $ens, $date);
             return response()->json([
-                'response_code' => 'OK',
+                'response-code' => 'OK',
                 'trans-id' => '100'
             ]);
         }
